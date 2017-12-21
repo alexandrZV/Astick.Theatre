@@ -1,0 +1,153 @@
+﻿<page-info title="Пользователи" />
+
+@using Astick.Shop.Core.Offices;
+
+@{
+	string officesHtml = "";
+	Cl_Office[] m_Offices = Cl_AppCore.m_Offices;
+	foreach (Cl_Office office in m_Offices) {
+		officesHtml += @"<li class=""mdl-menu__item mdl-menu__item--full-bleed-divider"" key=""" + office.p_ID + "\">" + office.p_Name + "</li>";
+	}
+}
+
+<script type="text/javascript">
+	var m_UsersTable;
+	$(document).ready(function () {
+		var $table = $('#table');
+		m_UsersTable = $table.mdlTable().data('mdl.table');
+		$table.on('load-detail-view.mdl.table', function (e, a_Index, a_Row, $a_Content) {
+			$.ajax({
+				type: "POST",
+				url: "/Admin/Users/f_GetRolesForUser",
+				data: {
+					p_UserName:  a_Row["p_UserName"]
+				},
+				success: function (data) {
+					var $content = $("<div></div>");
+					var $office = $(['<div class="office container">',
+														'<div class="mdl-selectfield mdl-selectfield--floating-label" data-read-only="true">',
+														'<input id="office_' + a_Row["p_UserName"] + '" class="mdl-selectfield__input" type="text" required key="' + a_Row.p_OfficeID + '" />',
+														'<label class="mdl-selectfield__label" for="office_' + a_Row["p_UserName"] +'">Офис</label>',
+														'<ul for="office_' + a_Row["p_UserName"] +'">@Html.Raw(officesHtml)</ul>',
+														'</div>',
+													'</div>'].join(''));
+					$content.append($office);
+					var $roles = $("<div class='roles container'></div>");
+					$content.append($roles);
+					var $rolesList = $("<ul class='list mdl-list'></ul>");
+					var index = 0;
+					$.each(data.roles, function () {
+						var role = this;
+						var checked = "";
+						if (role.inRole) checked = "checked";
+						var $itemRole = $('<li class="mdl-list__item role">'
+															+ '<span class="mdl-list__item-primary-content">' + role.roleName + '</span>'
+															+ '<span class="mdl-list__item-secondary-action">'
+																+ '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="cbx' + a_Row["p_UserName"] + "_" + index + '">'
+																+ '<input type="checkbox" id="cbx' + a_Row["p_UserName"] + "_" + index + '" class="mdl-checkbox__input" value="' + role.roleName + '" onchange="$(\'.bSaveRole\', $(this).parents(\'.roles\')).removeAttr(\'disabled\')\" ' + checked + ' />'
+																+ '</label>'
+															+ '</span>'
+														+ '</li>');
+						$rolesList.append($itemRole);
+						componentHandler.upgradeElement($itemRole[0].querySelector('.mdl-checkbox'), "MaterialCheckbox");
+						if (role.inRole) $(':checkbox', $itemRole).attr("checked", true);
+						index++;
+					});
+					$roles.append($rolesList);
+					$a_Content.prepend($content);
+					componentHandler.upgradeElement($('.mdl-selectfield', $office)[0], "MaterialSelectfield");
+				}
+			});
+		});
+	});
+
+	function f_UpdateRoles(a_Index, a_Row, $a_Content) {
+		var useInRoles = [];
+		m_UsersTable.f_ShowLoading(a_Index);
+		$(':checkbox', $a_Content).each(function () {
+			var useInRole = new Object();
+			useInRole.p_RoleName = $(this).val();
+			useInRole.p_InRole = this.checked;
+			useInRoles.push(useInRole);
+		});
+		var user = {
+			a_UserName: a_Row.p_UserName,
+			a_OfficeID: $('#office_' + a_Row.p_UserName, $a_Content).attr('key'),
+			a_Roles: useInRoles
+		}
+		$.ajax({
+			type: "POST",
+			url: "/Admin/Users/f_SetRolesForUser",
+			data: user,
+			contentType: 'application/x-www-form-urlencoded',
+			success: function (data, textStatus) {
+				m_UsersTable.f_HideLoading(a_Index);
+			}
+		});
+	}
+
+	function f_CardTemplate(table, item) {
+		var onlineText = "";
+		if (item.p_IsOnline)
+			onlineText = " online"
+			var text = '<div class="card_Login">'
+		+ '<ul class="mdl-list"><li class="mdl-list__item mdl-list__item--two-line">'
+		+ '<span class="mdl-list__item-primary-content">'
+		+ '<i class="material-icons mdl-list__item-avatar' + onlineText + '">person</i>'
+		+ '<span class="' + (item.p_IsLockedOut ? ' lock' : ' unlock') + '">[%p_UserName%]</span>'
+		+ '<span class="mdl-list__item-sub-title">[%p_SurName%] [%p_Name%] [%p_LastName%]</span>'
+		+ '<span class="mdl-list__item-sub-title">[%p_Mobile%]</span>'
+		+ '</li></ul>';
+		return text;
+	}
+</script>
+
+<section class="content">
+	<div class="users">
+		<table id="table"
+					 data-url="/Admin/Users/TableUsers"
+					 data-key="p_ID"
+					 data-page-size="13"
+					 data-sort-name="p_SurName"
+					 data-filter-control="true" data-filter-submit="true" data-show-filter-clear="true"
+					 data-card-template="f_CardTemplate"
+					 data-open-title-template="[%p_UserName%]"
+					 data-show-review="true"
+					 data-show-add="true"
+					 data-add-url="/Admin/Users/f_CreateUser"
+					 data-show-edit="true"
+					 data-edit-url="/Admin/Users/f_UpdateUser"
+					 data-edit-enabled-name="true"
+					 data-show-remove="true"
+					 data-remove-url="/Admin/Users/f_DeleteUser"
+					 data-remove-key="p_UserName"
+					 data-show-remove-selected="false"
+					 data-remove-selected_-url="/Admin/Users/f_DeleteUsers"
+					 data-show-columns="true"
+					 data-show-refresh="true"
+					 data-detail-view="true"
+					 data-detail-view-title="Роли"
+					 data-detail-view-icon="vpn_key"
+					 data-detail-show-cancel="true"
+					 data-detail-ok-function="f_UpdateRoles">
+			<thead>
+				<tr>
+					<th data-field="p_UserName" data-switchable="false" data-sortable="true" data-val-required="true">Логин</th>
+					<th data-field="p_Password" data-add-only="true" data-val-required="true">Пароль</th>
+					<th data-field="p_SurName" data-switchable="false" data-card-enabled="false" data-card-widthfull="true" data-sortable="true" data-filter-control="input" data-val-required="true">Фамилия</th>
+					<th data-field="p_Name" data-switchable="false" data-card-enabled="false" data-sortable="true" data-filter-control="input" data-val-required="true">Имя</th>
+					<th data-field="p_LastName" data-switchable="false" data-card-enabled="false" data-sortable="true" data-filter-control="input" data-val-required="true">Отчество</th>
+					<th data-field="p_Email" data-sortable="true" data-val-required="true" data-val-regex-msg="Неправильный Email" data-val-regex-pattern="^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})$">Email</th>
+					<th data-field="p_Mobile" data-type="mobile">Мобильный</th>
+					<th data-field="p_Birthday" data-card-visible="false" data-visible="false" data-type="date">Дата рождения</th>
+					<th data-field="p_Address" data-visible="false" data-card-widthfull="true" data-card-area="3" data-word-wrap="true" data-word-wrap-min-width="200">Адрес</th>
+					<th data-field="p_IsTax" data-card-enabled="false" data-type="bool">Учет налога</th>
+					<th data-field="p_EmailConfirmed" data-visible="false" data-colspan="1" data-type="bool" data-align="center">Подтв. Email</th>
+					<th data-field="p_IsLockedOut" data-field-title="p_LockoutEnd" data-card-enabled="false" data-colspan="1" data-type="bool" data-align="center">Заблокирован</th>
+					<th data-field="p_CreateDate" data-visible="false" data-card-enabled="false" data-sortable="true" data-read-only="true" data-type="datetime">Регистрация</th>
+					<th data-field="p_Comment" data-card-visible="false" data-visible="false" data-card-widthfull="true" data-card-area="3" data-word-wrap="true">Информация</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</section>

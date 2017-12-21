@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Astick.Theatre.Entities;
+using Astick.Theatre.Models.ManageViewModels;
+using Astick.Theatre.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Astick.Theatre.Models;
-using Astick.Theatre.Models.ManageViewModels;
-using Astick.Theatre.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Astick.Theatre.Controllers
-{
-    [Authorize]
+namespace Astick.Theatre.Controllers {
+	[Authorize]
     public class ManageController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<Cl_User> _userManager;
+        private readonly SignInManager<Cl_User> _signInManager;
         private readonly string _externalCookieScheme;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
 
         public ManageController(
-          UserManager<ApplicationUser> userManager,
-          SignInManager<ApplicationUser> signInManager,
+          UserManager<Cl_User> userManager,
+          SignInManager<Cl_User> signInManager,
           IOptions<IdentityCookieOptions> identityCookieOptions,
           IEmailSender emailSender,
           ISmsSender smsSender,
@@ -363,7 +360,7 @@ namespace Astick.Theatre.Controllers
             Error
         }
 
-        private Task<ApplicationUser> GetCurrentUserAsync()
+        private Task<Cl_User> GetCurrentUserAsync()
         {
             return _userManager.GetUserAsync(HttpContext.User);
         }

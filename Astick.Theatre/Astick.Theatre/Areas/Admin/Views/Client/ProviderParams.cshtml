@@ -1,0 +1,37 @@
+﻿@model I_ProviderUser
+
+<div id="params">
+	@if (Model == null) {
+	<h6>
+		Отсутствует класс поставщика!
+	</h6>
+	} else {
+	<input type="hidden" id="a_UserName" name="a_UserName" value="@Model.p_UserName" />
+		<input type="hidden" id="a_ProviderID" name="a_ProviderID" value="@Model.p_ID" />
+		<input type="hidden" id="a_ProviderUserID" name="a_ProviderUserID" value="@Model.p_IDUser" />
+		<input type="hidden" id="a_ProviderName" name="a_ProviderName" value="@Model.p_Name" />
+		<div>
+			<a class="val" href="http:\\@Model.p_Host" target="_blank">@string.Format("{0} ({1})", Model.p_Name, Model.p_Host)</a>
+		</div>
+		<div>
+			@Html.Mdl_TextBox("a_Login", "Логин", Model.p_Login)
+		</div>
+		<div>
+			@Html.Mdl_TextBox("a_Pwd", "Пароль", Model.p_Password)
+		</div>
+		if (Model is I_ProviderUserService) {
+		<div>
+			@Html.Mdl_TextBox("a_Token", "Токен", ((I_ProviderUserService)Model).p_Token)
+		</div>
+		}
+		<div>
+			@Html.Mdl_TextBox("a_Priority", "Приоритет", Model.p_Priority.ToString())
+		</div>
+		<div>
+			@Html.Mdl_CheckBox("a_IsEnabled", "Использование", Model.p_IsEnabled)
+		</div>
+		<div class="button">
+			<button class="mdl-button mdl-js-button mdl-button--primary" type="submit">Сохранить</button>
+		</div>
+	}
+</div>

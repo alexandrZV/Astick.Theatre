@@ -1,0 +1,89 @@
+﻿@model Astick.Shop.Core.Requisites.Cl_Owner
+<page-info title="Реквизиты организации" />
+
+<script type="text/javascript">
+	var elOrgs;
+
+	$(document).ready(function () {
+		$(".editorM").each(function () {
+			var mass;
+			if ($(this).attr('value') != "") mass = $(this).attr('value').split(',');
+			var title = $(this).attr('title');
+			var $editorMass = $(this).editorMass({
+				name: $(this).attr('name'), array: mass, title: title, onAddClick: function (value) {
+					if (value.length > 5) { return true; }
+					else {
+						alert('Номер нового ' + title + 'а должен содержать не менее 6 символов');
+						return false;
+					}
+				}
+			});
+		});
+		elOrgs = document.querySelectorAll('.isOrg');
+		f_EnablingOrg(@Model.p_IsOrg.ToString().ToLower());
+		document.getElementById('cbx_p_IsOrg').onchange = function (e) {
+			f_EnablingOrg(this.checked);
+		};
+	});
+
+	function f_EnablingOrg(a_IsOrg) {
+		for (var i = 0; i < elOrgs.length; i++) {
+			if (a_IsOrg) {
+				elOrgs[i].style = "";
+				elOrgs[i].removeAttribute("disabled");
+			} else {
+				elOrgs[i].style = "display:none";
+				elOrgs[i].setAttribute("disabled", "disabled");
+			}
+		}
+	}
+</script>
+
+<section class="content">
+	<div class="owner">
+		<form ajax="true" ajax-url="/admin/owner/f_UpdateOwner" ajax-begin="f_ShowLoading()" ajax-success="f_HideLoading()">
+			<mdl-checkbox label="Юридическое лицо" asp-for="p_IsOrg" />
+			<div><mdl-textarea label="Краткое название" asp-for="p_BriefName" rows="1" required="true" /></div>
+			<div><mdl-textarea label="Полное название" asp-for="p_Name" rows="3" required="true" /></div>
+			<div><mdl-textarea label="Адрес" asp-for="p_Address" required="true" /></div>
+			<div>
+				<mdl-input label="Почтовый индекс" asp-for="p_Index" required="true" />
+				<mdl-input label="Email" asp-for="p_Email" required="true" />
+			</div>
+			<div>
+				<mdl-input label="ИНН" asp-for="p_INN" required="true" />
+				<div class="isOrg">
+					<mdl-input label="КПП" asp-for="p_KPP" required="true" />
+				</div>
+			</div>
+			<div>
+				<mdl-input label="ОГРН ИП" asp-for="p_OgrnIP" required="true" />
+				<mdl-input label="ОКПО" asp-for="p_OKPO" required="true" />
+			</div>
+			<div class="isOrg">
+				<mdl-input label="ОКАТО" asp-for="p_OKATO" required="true" />
+				<mdl-input label="ОКОГУ" asp-for="p_OKOGU" required="true" />
+			</div>
+			<mdl-textarea label="Наименование банка" asp-for="p_BankName" required="true" />
+			<div>
+				<mdl-input label="Счет" asp-for="p_Account" required="true" />
+				<mdl-input label="Кор. счет банка" asp-for="p_BankCorrAccount" required="true" />
+			</div>
+			<div>
+				<mdl-input label="Город банка" asp-for="p_BankCity" required="true" />
+				<mdl-input label="БИК банка" asp-for="p_BankBIK" required="true" />
+			</div>
+			<div>
+				<mdl-input label="ИНН банка" asp-for="p_BankINN" required="true" />
+				<mdl-input label="КПП банка" asp-for="p_BankKPP" required="true" />
+			</div>
+			<mdl-textarea label="Телефоны" asp-for="p_Telephones" rows="4" value="@string.Join("\n", Model.p_Telephones)" />
+			<div><mdl-button type="submit">Сохранить</mdl-button></div>
+		</form>
+	</div>
+</section>
+
+
+
+
+

@@ -1,0 +1,19 @@
+﻿.hall_schema {
+	width: 100%;
+}
+
+.hall_schema_row_title
+{
+	font-weight: bold;
+	width: 80px;
+}
+
+.hall_schema_row_number
+{
+	padding: 5px 5px;
+}
+
+.hall_schema_row_number:hover {
+	cursor: pointer;
+	background-color: aqua;
+}

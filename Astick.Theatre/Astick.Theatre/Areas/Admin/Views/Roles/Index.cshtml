@@ -1,0 +1,124 @@
+﻿<page-info title="Роли" />
+
+<script type="text/javascript">
+	var m_RolesTable;
+	$(document).ready(function () {
+		var $table = $('#table');
+		$table.mdlTable();
+		m_RolesTable = $table.mdlTable().data('mdl.table');
+		$table.on('load-detail-view.mdl.table', function (e, a_Index, a_Row, $a_Content) {
+			$.ajax({
+				type: "POST",
+				url: "/Admin/Roles/f_GetRolesForUser",
+				data: { a_RoleName: a_Row["p_Name"] },
+				success: function (data) {
+					var $content = $("<div></div>");
+					var $states = $("<div class='mdl-table states'></div>");
+					$content.append($states);
+					var $table = $("<table class='mdl-data-table no-bordered'><tr><th>Состояние заказа</th><th style='text-align: center'>Чтение</th><th style='text-align: center'>Изменение</th><th style='text-align: center'>Перевод</th></tr></table>");
+					$.each(data, function () {
+						var state = this;
+						var $itemState = $("<tr class='state'><td style='text-align: left'>" + state.p_StateOrder.p_Name + "</td>" +
+							"<td style='text-align: center'><input type=\"checkbox\" onchange=\"f_ActionEnabled(this); $('.bSaveStates', $(this).parents('.states')).removeAttr('disabled')\" value=\"r_" + state.p_StateOrder.p_StateID + "\" /></td>" +
+							"<td style='text-align: center'><input type=\"checkbox\" onchange=\"f_ActionEnabled(this); $('.bSaveStates', $(this).parents('.states')).removeAttr('disabled')\" value=\"e_" + state.p_StateOrder.p_StateID + "\" /></td>" +
+							"<td style='text-align: center'><input type=\"checkbox\" onchange=\"$('.bSaveStates', $(this).parents('.states')).removeAttr('disabled')\" value=\"a_" + state.p_StateOrder.p_StateID + "\" /></td></tr>");
+						$table.append($itemState);
+						var $checkbox = $(':checkbox', $itemState);
+						var isActionEnabled = false;
+						if (state.p_Reader) {
+							$($checkbox[0]).attr("checked", true);
+							isActionEnabled = true;
+						}
+						if (state.p_Editing) {
+							$($checkbox[1]).attr("checked", true);
+							isActionEnabled = true;
+						}
+						var $chb = $($checkbox[2]);
+						if (state.p_Actionable) $chb.attr("checked", true);
+						if (!isActionEnabled)
+							$chb.attr('disabled', 'disabled');
+					});
+					$states.append($table);
+					$a_Content.prepend($content);
+				}
+			});
+		});
+	});
+	function f_ActionEnabled(a_ChBAction) {
+		var $chbs = $(':checkbox', $(a_ChBAction).parents('tr.state'));
+		if ($chbs[0].checked || $chbs[1].checked)
+			$($chbs[2]).removeAttr('disabled');
+		else
+			$($chbs[2]).attr('disabled', 'disabled');
+	}
+
+	function f_UpdateStates(a_Index, a_Row, $a_Content) {
+		m_RolesTable.f_ShowLoading(a_Index);
+		var lReaders = [];
+		var lEditings = [];
+		var lActions = [];
+		$(':checkbox', $a_Content).each(function () {
+			if ($(this).prop("checked")) {
+				var val = $(this).val();
+				if (val.substring(0, 1) == 'r') {
+					lReaders.push(val.substring(2));
+				}
+				else if (val.substring(0, 1) == 'e') {
+					lEditings.push(val.substring(2));
+				}
+				else if (val.substring(0, 1) == 'a') {
+					lActions.push(val.substring(2));
+				}
+			}
+		});
+		if (lReaders.length == 0) lReaders = "";
+		if (lEditings.length == 0) lEditings = "";
+		if (lActions.length == 0) lActions = "";
+		var role = new Object();
+		role.a_RoleName = a_Row.p_Name;
+		role.a_Readers = lReaders;
+		role.a_Editings = lEditings;
+		role.a_Actions = lActions;
+		$.ajax({
+			type: "POST",
+			url: "/Admin/Roles/f_UpdateStatesForRole",
+			data: role,
+			success: function (data, textStatus) {
+				m_RolesTable.f_HideLoading(a_Index);
+			}
+		});
+	}
+</script>
+
+<section class="content">
+	<div class="roles">
+		<table id="table" data-locale="ru-RU"
+					 data-url="/Admin/Roles/f_GetRoles"
+					 data-key="id"
+					 data-editable="true"
+					 data-sort-name="p_Name"
+					 data-show-add="true"
+					 data-add-url="/Admin/Roles/f_CreateRole"
+					 data-show-edit="true"
+					 data-edit-url="/Admin/Roles/f_UpdateRole"
+					 data-show-remove="true"
+					 data-remove-url="/Admin/Roles/f_DeleteRole"
+					 data-remove-key="p_Name"
+					 data-show-refresh="true"
+					 data-show-columns="true"
+					 data-detail-view="true"
+					 data-detail-view-title="Управление статусами"
+					 data-detail-view-icon="device_hub"
+					 data-detail-show-cancel="true"
+					 data-detail-ok-function="f_UpdateStates">
+			<thead>
+				<tr>
+					<th data-field="concurrencyStamp" data-type="hidden">concurrencyStamp</th>
+					<th data-field="p_Name" data-min="2" data-max="25" data-val-required="true">Роль</th>
+					<th data-field="p_Discount" data-val-required="true" data-type="number" data-min="0" data-max="100" data-width="90px" data-val-regex-msg="Необходимо ввести целое число от 0 до 100!" data-val-regex-pattern="^\d{1,2}|100$" data-editable="true">Скидка, %</th>
+					<th data-field="p_Description" data-val-required="true">Описание</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</section>

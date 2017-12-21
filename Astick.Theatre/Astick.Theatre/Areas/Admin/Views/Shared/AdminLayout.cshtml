@@ -1,0 +1,29 @@
+﻿@{
+	Layout = "~/Areas/Admin/Views/Shared/ARMLayout.cshtml";
+}
+
+@section rsARMHeader
+{
+	@*<script src="@Url.f_GetUrlJSForEs5("~/js/admin/arm_mail")" type="text/javascript"></script>*@
+	<script src="@Url.f_GetUrlJSForEs5("~/js/admin/admin")" type="text/javascript"></script>
+	<link href="@Url.f_GetUrlCSSForLess("~/css/admin/admin")" rel="stylesheet" type="text/css" />
+
+	<link href="@Url.f_GetUrlCSSForLess("~/css/admin/users")" rel="stylesheet" type="text/css" />
+	<link href="@Url.f_GetUrlCSSForLess("~/css/admin/map")" rel="stylesheet" type="text/css" />
+}
+@section rsARMTitle
+{
+	Админка
+}
+@section rsARMMenu
+{
+	@Html.Partial("~/Areas/Admin/Views/Shared/Menu.cshtml")
+}
+@section rsARMToolbar
+{
+	<a class="mdl-cell--hide-phone" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update=".course" href="/Admin/ARM/f_UpdateCourse">
+		@*@{ Html.RenderPartial("~/Areas/Admin/Views/Shared/Course.cshtml", Cl_Course.f_UpdateCourse()); }*@
+	</a>
+	<a class="material-icons mdl-badge mdl-badge--overlap mdl-cell--hide-phone mail_counter" href="https://mail.yandex.ru/?pdd_domain=astick.ru&uid=1130000022649160&login=shop#inbox" target="_blank">mail</a>
+}
+@RenderBody()

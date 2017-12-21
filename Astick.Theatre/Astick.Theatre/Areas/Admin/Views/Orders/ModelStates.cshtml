@@ -1,0 +1,89 @@
+﻿<page-info title="Модель состояния" />
+
+<script type="text/javascript">
+	var m_DataModelStates = [];
+
+	$(document).ready(function () {
+		var $tableState = $('#tableState');
+		$tableState.mdlTable();
+		$tableState.on('load-success.mdl.table', function (e, data) {
+			if ($tableState[0] == e.target) {
+				m_DataModelStates = data;
+				f_UpdateDataColors(data);
+			}
+		});
+		$tableState.on('load-detail-view.mdl.table', function (e, index, row, $detail) {
+			$('table', $detail).mdlTable('f_Destroy').mdlTable({ columns: f_GetTableOperColumns(), dataValues: [{ field: 'a_StateID', value: row.p_StateID }] });
+		});
+	});
+
+	function f_GetTableOperColumns() {
+		return [{ field: 'p_ToStateName', title: 'Перевод в', valRequired: true, type: "select", selectField: "p_ToStateID", selectData: m_DataModelStates.rows, selectKey: "p_StateID", selectValue: "p_Name" },
+		{ field: 'p_Name', title: 'Название команды', valRequired: true },
+		{ field: 'p_Visible', type: 'bool', title: 'Отображать' },
+		{ field: 'p_Condition', title: 'Условие отображения' },
+		{ field: 'p_Priority', title: 'Приоритет', align: 'center', type: 'uint', valRequired: true }];
+	}
+
+	function f_DetailFormatterState(index, row) {
+		var result = '<table id="tableOper' + row.p_StateID + '" class="opers" data-sort-name="p_Priority" data-locale="ru-RU"'
+			+ 'data-url="/Admin/Orders/f_GetOpersStates?a_StateID=' + row.p_StateID + '" data-key="p_OperationID" data-show-refresh="true"'
+			+ 'data-show-add="true" data-add-url="/Admin/Orders/f_AddOperState"'
+			+ 'data-show-edit="true" data-edit-url="/Admin/Orders/f_UpdateOperState"'
+			+ 'data-show-remove="true" data-remove-url="/Admin/Orders/f_DeleteOperState">'
+			+ '</table>';
+		return result;
+	}
+
+	function f_UpdateDataColors(a_Items) {
+		[].forEach.call(a_Items, function (item, index) {
+			f_UpdateDataRowColor(item);
+		});
+	}
+
+	function f_UpdateDataRowColor(a_Item) {
+		if (a_Item.p_Priority < 10) {
+			if (moment(a_Item.p_DateSupply).isBefore(moment(), "date")) {
+				a_Item.p_ColorState = 1;
+			} else if (moment(a_Item.p_DateSupply).isSame(moment(), "date")) {
+				a_Item.p_ColorState = 2;
+			} else if (moment(a_Item.p_DateSupply).isBefore(moment().add(2, "day"), "date")) {
+				a_Item.p_ColorState = 3;
+			}
+		}
+	}
+</script>
+
+<section class="content">
+	<div class="modelstate">
+		<table id="tableState" data-toggle="table" data-locale="ru-RU"
+					 data-url="/Admin/Orders/f_GetStatesOrders"
+					 data-key="p_StateID"
+					 data-sort-name="p_Priority"
+					 data-show-add="true"
+					 data-add-url="/Admin/Orders/f_AddStateOrders"
+					 data-show-edit="true"
+					 data-edit-url="/Admin/Orders/f_UpdateStateOrders"
+					 data-show-remove="true"
+					 data-remove-url="/Admin/Orders/f_DeleteStateOrders"
+					 data-show-refresh="true"
+					 data-show-columns="true"
+					 data-detail-view="true"
+					 data-detail-view-title="Операции"
+					 data-detail-view-icon="directions"
+					 data-detail-formatter="f_DetailFormatterState"
+					 data-row-colors-type="var"
+					 data-row-colors="p_Priority">
+			<thead>
+				<tr>
+					<th data-field="p_SysName" data-min="2" data-max="25" data-visible="true" data-sortable="true" data-val-required="true">Системное название</th>
+					<th data-field="p_Name" data-min="2" data-max="50" data-switchable="false" data-sortable="true" data-val-required="true">Название</th>
+					<th data-field="p_Title" data-visible="false" data-min="2" data-max="50" data-val-required="true">Заголовок</th>
+					<th data-field="p_Accounting" data-type="bool">Учет в расчетах<br/>заказов</th>
+					<th data-field="p_Priority" data-type="uint" data-max="100" data-align="center" data-sortable="true" data-val-required="true">Приоритет</th>
+					<th data-field="p_Description" data-card-widthfull="true" data-card-area="3" data-word-wrap="true">Описание</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</section>

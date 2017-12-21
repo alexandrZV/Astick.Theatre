@@ -5,21 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Astick.Theatre
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
+namespace Astick.Theatre {
+	public class Program {
+		public static void Main(string[] args) {
+			var host = new WebHostBuilder()
+					.UseKestrel()
+					.UseContentRoot(Directory.GetCurrentDirectory())
+					.UseIISIntegration()
+					.UseStartup<Startup>()
+					.UseApplicationInsights()
+					.Build();
 
-            host.Run();
-        }
-    }
+			host.Run();
+		}
+	}
 }

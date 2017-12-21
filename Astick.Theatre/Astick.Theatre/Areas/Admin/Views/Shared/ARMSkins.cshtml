@@ -1,0 +1,23 @@
+﻿@{
+	string[] m_Skins = new string[] { "blue", "black", "purple", "green", "red", "yellow" };
+}
+
+<ul class="skins">
+	@foreach (string skin in m_Skins)
+	{
+	<li>
+		<a href="javascript:void(0);" data-skin="skin-@skin">
+			<div>
+				<span class="skin-top skin-bg-@skin"></span>
+			</div>
+			<div>
+				<div class="skin-left">
+					<span class="skin-left_top skin-left_top-@skin"></span>
+					<span class="skin-left_content skin-left_content-@skin"></span>
+				</div>
+				<span class="skin-content skin-content-@skin"></span>
+			</div>
+		</a>
+	</li>
+	}
+</ul>

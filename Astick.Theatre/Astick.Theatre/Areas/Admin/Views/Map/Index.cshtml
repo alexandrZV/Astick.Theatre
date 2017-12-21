@@ -1,0 +1,24 @@
+﻿<page-info title="Настройка карты сайта" />
+
+<script type="text/javascript">
+	function f_Unload(a_Action) {
+		f_ShowLoading();
+		$.post("/Admin/Map/" + a_Action, function (data) {
+			f_HideLoading();
+			alert("Выгрузилось " + data.count + " страниц.");
+		});
+	}
+</script>
+
+	<section class="content">
+		<div class="map">
+			<div class="map_item map_Catalog">
+				<div>Автокаталог аналоговых запчастей</div>
+				<button class="mdl-button mdl-js-button mdl-button--primary" type="button" onclick="f_Unload('f_UnloadCatalog')"><span class="material-icons">file_upload</span>Выгрузить</button>
+			</div>
+			<div class="map_item map_SEO">
+				<div>Карта сайтя для SEO</div>
+				<button class="mdl-button mdl-js-button mdl-button--primary" type="button" onclick="f_Unload('f_Unload')"><span class="material-icons">file_upload</span>Выгрузить</button>
+			</div>
+		</div>
+	</section>

@@ -1,0 +1,14 @@
+﻿@using Astick.Core.Web
+@using Astick.Shop.Core
+@using Astick.Shop.Core.Data
+@using Astick.Shop.Core.Account
+@using Astick.Autoparts.Web
+@using Astick.Autoparts.Web.Data
+@using Astick.Autoparts.Web.Classes
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Astick.Core.Web
+@inject UserManager<Cl_User> m_UserManager
+@inject Cl_ShopDBContext m_AppDbContext
+@inject Cl_Settings m_Settings
