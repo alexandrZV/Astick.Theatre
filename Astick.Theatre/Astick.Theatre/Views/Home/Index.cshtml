@@ -1,47 +1,5 @@
 ﻿@{
 	ViewData["Title"] = "Home Page";
-	int m_CountCollumns = 20;
-	int m_CountRows = 10;
 }
 
-<div id="hall">
-	<table class="hall_schema">
-		@for (int i = 1; i <= m_CountRows; i++) {
-		<tr class="hall_schema_row">
-			<td class="hall_schema_row_number hall_schema_row_title">Ряд №@i</td>
-			@for (int y = 1; y <= m_CountCollumns; y++) {
-			<td class="hall_schema_row_number" data-toggle="modal" data-target="#modalSeatEdit">@y</td>
-			}
-		</tr>
-		}
-	</table>
-	<div id="modalSeatEdit" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Редактирование места</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="elFIO">ФИО</label>
-						<input type="text" class="form-control" id="elFIO" placeholder="ФИО">
-					</div>
-					<div class="form-group">
-						<label for="elMobile">Мобильный</label>
-						<input type="text" class="form-control" id="elMobile" placeholder="Мобильный">
-					</div>
-					<div class="form-group">
-						<label for="elComment">Примечание</label>
-						<input type="text" class="form-control" id="elComment" placeholder="Примечание">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Изменить</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Освободить</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<h1>АРМ театра</h1>

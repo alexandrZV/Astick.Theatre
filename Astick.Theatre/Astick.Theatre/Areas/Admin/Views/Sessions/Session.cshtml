@@ -1,0 +1,231 @@
+﻿@model Cl_Session
+
+@using Newtonsoft.Json;
+
+@{
+	Layout = "";
+	var m_JsonSerializerSettings = new JsonSerializerSettings {
+		ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+	};
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Карта зрительных мест</title>
+
+	<environment names="Development">
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" href="~/css/session.css" asp-append-version="true" />
+	</environment>
+	<environment names="Staging,Production">
+		<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+					asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+					asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+		<link rel="stylesheet" href="~/css/session.min.css" asp-append-version="true" />
+	</environment>
+	<script type="text/javascript">
+		var m_Seats = @Html.Raw(JsonConvert.SerializeObject(Model.p_Seats, m_JsonSerializerSettings));
+	</script>
+</head>
+<body>
+	<page-info title="Концерт" />
+	<div id="hall">
+		<h3>@string.Format("Концерт \"{0}\" {1}", Model.p_Hall.p_Name, Model.p_Date.ToString("dd.MM.yyyy"))</h3>
+		<table class="hall_schema">
+			@for (int i = 1; i <= Model.p_Hall.p_RowsCount; i++) {
+			<tr class="hall_schema_row">
+				<td class="hall_schema_row_title">Ряд №@i</td>
+				@for (int y = 1; y <= Model.p_Hall.p_RowNumbersCount; y++) {
+					Cl_Seat seat = Model.p_Seats.FirstOrDefault(s => s.p_Row == i && s.p_Number == y);
+					<td class="hall_schema_row_number @if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Booked) { <text>hall_schema_row_number_booked</text> } else if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Purchased) { <text>hall_schema_row_number_purchased</text> }" data-toggle="modal" data-target="#modalSeatEdit" data-id="@seat.p_ID" data-row="@i" data-col="@y">
+						<div class="hall_schema_row_number_val">@y</div>
+						<div class="hall_schema_row_number_price"><span class="hall_schema_row_number_price_val">@((int)seat.p_Price)</span> руб.</div>
+					</td>
+				}
+			</tr>
+			}
+		</table>
+		<div id="modalSeatEdit" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<form class="modal-content" action="#">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Редактирование места</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="elFIO">ФИО</label>
+							<input type="text" class="form-control" id="elFIO" placeholder="ФИО">
+						</div>
+						<div class="form-group">
+							<label for="elMobile">Мобильный</label>
+							<input type="text" class="form-control" id="elMobile" placeholder="Мобильный">
+						</div>
+						<div class="form-group">
+							<label for="elPrice">Стоимость</label>
+							<input type="number" class="form-control" id="elPrice" required placeholder="Стоимость">
+						</div>
+						<div class="form-group">
+							<label for="elComment">Примечание</label>
+							<input type="text" class="form-control" id="elComment" placeholder="Примечание">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary" id="bSeatLock">Забронировать</button>
+						<button type="submit" class="btn btn-primary" id="bSeatSell">Продать</button>
+						<button type="submit" class="btn btn-primary" id="bSeatEdit">Изменить</button>
+						<button type="button" class="btn btn-danger" id="bSeatUnLock" data-dismiss="modal">Освободить</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<environment names="Development">
+		<script src="~/lib/jquery/dist/jquery.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+						asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+						asp-fallback-test="window.jQuery"
+						crossorigin="anonymous"
+						integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+		</script>
+		<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+						asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+						asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+						crossorigin="anonymous"
+						integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+		</script>
+		<script src="~/js/site.min.js" asp-append-version="true"></script>
+	</environment>
+	<script type="text/javascript">
+		var elIFIO = document.getElementById("elFIO");
+		var elIMobile = document.getElementById("elMobile");
+		var elIPrice = document.getElementById("elPrice");
+		var elIComment = document.getElementById("elComment");
+		var elBSeatLock = document.getElementById("bSeatLock");
+		var elBSeatSell = document.getElementById("bSeatSell");
+		var elBSeatEdit = document.getElementById("bSeatEdit");
+		var elBSeatUnLock = document.getElementById("bSeatUnLock");
+		var f_LockSeat = function(a_Row, a_Col, a_TypeEmployment) {
+			$.post("/admin/sessions/f_SetSeat", { p_SessionID: '@Model.p_ID', p_Row: a_Row, p_Number: a_Col, p_UserFIO: elIFIO.value, p_Mobile: elIMobile.value, p_Price: elIPrice.value, p_TypeEmployment: a_TypeEmployment, p_Comment: elIComment.value }, function (data) {
+				if (data.error === undefined) {
+					var seat;
+					for (var i in m_Seats) {
+						if (m_Seats[i].p_Row === data.p_Row && m_Seats[i].p_Number === data.p_Number) {
+							seat = m_Seats[i];
+							break;
+						}
+					}
+					if (seat !== undefined) {
+						seat.p_UserFIO = data.p_UserFIO;
+						seat.p_Mobile = data.p_Mobile;
+						seat.p_Price = data.p_Price;
+						seat.p_Comment = data.p_Comment;
+					} else {
+						m_Seats.push(data);
+						seat = data;
+					}
+					if (a_TypeEmployment === @Cl_Seat.E_TypeEmployment.Booked.GetHashCode()) {
+						$('.hall_schema_row_number[data-row = "' + a_Row + '"][data-col = "' + a_Col + '"]').addClass('hall_schema_row_number_booked');
+					} else if (a_TypeEmployment === @Cl_Seat.E_TypeEmployment.Purchased.GetHashCode()) {
+						$('.hall_schema_row_number[data-row = "' + a_Row + '"][data-col = "' + a_Col + '"]').addClass('hall_schema_row_number_purchased');
+					}
+					$('.hall_schema_row_number[data-row = "' + a_Row + '"][data-col = "' + a_Col + '"] .hall_schema_row_number_price_val').html(seat.p_Price);
+				} else {
+					alert(data.error);
+				}
+			});
+		}
+		elBSeatLock.addEventListener("click", function () {
+			if (document.querySelector("#modalSeatEdit form").checkValidity()) {
+				var row = parseInt(elBSeatLock.getAttribute('data-row'));
+				var col = parseInt(elBSeatLock.getAttribute('data-col'));
+				f_LockSeat(row, col, @Cl_Seat.E_TypeEmployment.Booked.GetHashCode());
+				$("#modalSeatEdit").modal("hide");
+			}
+		});
+		elBSeatSell.addEventListener("click", function () {
+			if (document.querySelector("#modalSeatEdit form").checkValidity()) {
+				var row = parseInt(elBSeatLock.getAttribute('data-row'));
+				var col = parseInt(elBSeatLock.getAttribute('data-col'));
+				f_LockSeat(row, col, @Cl_Seat.E_TypeEmployment.Purchased.GetHashCode());
+				$("#modalSeatEdit").modal("hide");
+			}
+		});
+		elBSeatEdit.addEventListener("click", function () {
+			if (document.querySelector("#modalSeatEdit form").checkValidity()) {
+				var row = parseInt(elBSeatLock.getAttribute('data-row'));
+				var col = parseInt(elBSeatLock.getAttribute('data-col'));
+				f_LockSeat(row, col, @Cl_Seat.E_TypeEmployment.Free.GetHashCode());
+				$("#modalSeatEdit").modal("hide");
+			}
+		});
+		elBSeatUnLock.addEventListener("click", function () {
+			if (confirm("Вы уверены, что хотите снять бронь места?")) {
+				var seatID = elBSeatUnLock.getAttribute('data-id');
+				$.post("/admin/sessions/f_RemoveSeat", { a_SeatID: seatID }, function (data) {
+					if (data.error === undefined) {
+						var index;
+						for (var i in m_Seats) {
+							if (m_Seats[i].p_Row === data.p_Row && m_Seats[i].p_Number === data.p_Number) {
+								index = i;
+								break;
+							}
+						}
+						if (index !== undefined) {
+							m_Seats.splice(index, 1);
+						}
+						$('.hall_schema_row_number[data-row = "' + data.p_Row + '"][data-col = "' + data.p_Number + '"]').removeClass('hall_schema_row_number_booked').removeClass('hall_schema_row_number_purchased');
+					} else {
+						alert(data.error);
+					}
+				});
+			}
+		});
+		$('#modalSeatEdit').on('show.bs.modal', function (event) {
+			var button$ = $(event.relatedTarget)
+			var row = parseInt(button$.data('row'));
+			var col = parseInt(button$.data('col'));
+			var seatId = button$.data('id');
+			elBSeatLock.setAttribute('data-row', row);
+			elBSeatLock.setAttribute('data-col', col);
+			elBSeatSell.setAttribute('data-row', row);
+			elBSeatSell.setAttribute('data-col', col);
+			elBSeatEdit.setAttribute('data-row', row);
+			elBSeatEdit.setAttribute('data-col', col);
+			elBSeatUnLock.setAttribute('data-id', seatId);
+			var seat;
+			for (var i in m_Seats) {
+				if (m_Seats[i].p_Row === row && m_Seats[i].p_Number === col) {
+					seat = m_Seats[i];
+					break;
+				}
+			}
+			if (seat !== undefined) {
+				elIFIO.value = seat.p_UserFIO;
+				elIMobile.value = seat.p_Mobile;
+				elIPrice.value = seat.p_Price;
+				elIComment.value = seat.p_Comment;
+				if (seat.p_TypeEmployment === @Cl_Seat.E_TypeEmployment.Free.GetHashCode()) {
+					if (elBSeatEdit.classList.contains('hidden')) elBSeatEdit.classList.remove('hidden');
+					elBSeatUnLock.classList.add('hidden');
+				} else {
+					elBSeatEdit.classList.add('hidden');
+					if (elBSeatUnLock.classList.contains('hidden')) elBSeatUnLock.classList.remove('hidden');
+				}
+			} else {
+				elIFIO.value = "";
+				elIMobile.value = "";
+				elIPrice.value = "";
+				elIComment.value = "";
+			}
+		});
+	</script>
+</body>

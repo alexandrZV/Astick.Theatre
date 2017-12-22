@@ -1,0 +1,27 @@
+﻿.nav .course > div {
+  display: inline-block;
+}
+@media (max-width: 830px) {
+  .nav .course > div.eur {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+  .nav .course > div.usd {
+    display: none;
+  }
+}
+@media (max-width: 340px) {
+  .nav li.notifications-menu {
+    display: none;
+  }
+}
+@media (max-width: 290px) {
+  .nav li.tasks-menu {
+    display: none;
+  }
+}
+paper-input:focus,
+th:focus {
+  outline-color: transparent;
+}

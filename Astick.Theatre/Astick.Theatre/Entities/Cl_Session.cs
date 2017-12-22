@@ -17,10 +17,12 @@ namespace Astick.Theatre.Entities {
 		public string p_Name { get; set; }
 		[Column("F_HALL_ID")]
 		[ForeignKey("p_Hall")]
-		public int p_HallID { get; set; }
+		public Guid p_HallID { get; set; }
 		public Cl_Hall p_Hall { get; set; }
 		[Column("F_DATE")]
 		public DateTime p_Date { get; set; }
+		[Column("F_PRICE")]
+		public decimal p_Price { get; set; }
 		[Column("F_DESC")]
 		public string p_Description { get; set; }
 		public List<Cl_Seat> p_Seats { get; set; }

@@ -1,15 +1,5 @@
 ﻿<page-info title="Пользователи" />
 
-@using Astick.Shop.Core.Offices;
-
-@{
-	string officesHtml = "";
-	Cl_Office[] m_Offices = Cl_AppCore.m_Offices;
-	foreach (Cl_Office office in m_Offices) {
-		officesHtml += @"<li class=""mdl-menu__item mdl-menu__item--full-bleed-divider"" key=""" + office.p_ID + "\">" + office.p_Name + "</li>";
-	}
-}
-
 <script type="text/javascript">
 	var m_UsersTable;
 	$(document).ready(function () {
@@ -24,14 +14,6 @@
 				},
 				success: function (data) {
 					var $content = $("<div></div>");
-					var $office = $(['<div class="office container">',
-														'<div class="mdl-selectfield mdl-selectfield--floating-label" data-read-only="true">',
-														'<input id="office_' + a_Row["p_UserName"] + '" class="mdl-selectfield__input" type="text" required key="' + a_Row.p_OfficeID + '" />',
-														'<label class="mdl-selectfield__label" for="office_' + a_Row["p_UserName"] +'">Офис</label>',
-														'<ul for="office_' + a_Row["p_UserName"] +'">@Html.Raw(officesHtml)</ul>',
-														'</div>',
-													'</div>'].join(''));
-					$content.append($office);
 					var $roles = $("<div class='roles container'></div>");
 					$content.append($roles);
 					var $rolesList = $("<ul class='list mdl-list'></ul>");
@@ -55,7 +37,6 @@
 					});
 					$roles.append($rolesList);
 					$a_Content.prepend($content);
-					componentHandler.upgradeElement($('.mdl-selectfield', $office)[0], "MaterialSelectfield");
 				}
 			});
 		});
@@ -72,7 +53,6 @@
 		});
 		var user = {
 			a_UserName: a_Row.p_UserName,
-			a_OfficeID: $('#office_' + a_Row.p_UserName, $a_Content).attr('key'),
 			a_Roles: useInRoles
 		}
 		$.ajax({
@@ -141,7 +121,6 @@
 					<th data-field="p_Mobile" data-type="mobile">Мобильный</th>
 					<th data-field="p_Birthday" data-card-visible="false" data-visible="false" data-type="date">Дата рождения</th>
 					<th data-field="p_Address" data-visible="false" data-card-widthfull="true" data-card-area="3" data-word-wrap="true" data-word-wrap-min-width="200">Адрес</th>
-					<th data-field="p_IsTax" data-card-enabled="false" data-type="bool">Учет налога</th>
 					<th data-field="p_EmailConfirmed" data-visible="false" data-colspan="1" data-type="bool" data-align="center">Подтв. Email</th>
 					<th data-field="p_IsLockedOut" data-field-title="p_LockoutEnd" data-card-enabled="false" data-colspan="1" data-type="bool" data-align="center">Заблокирован</th>
 					<th data-field="p_CreateDate" data-visible="false" data-card-enabled="false" data-sortable="true" data-read-only="true" data-type="datetime">Регистрация</th>

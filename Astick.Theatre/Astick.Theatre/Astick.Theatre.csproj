@@ -18,8 +18,81 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\hall.css" />
-    <Content Include="wwwroot\css\hall.less" />
+    <Content Include="wwwroot\css\admin\admin.css" />
+    <Content Include="wwwroot\css\admin\admin.less" />
+    <Content Include="wwwroot\css\admin\admin.min.css" />
+    <Content Include="wwwroot\css\admin\arm.css" />
+    <Content Include="wwwroot\css\admin\arm.less" />
+    <Content Include="wwwroot\css\admin\arm.min.css" />
+    <Content Include="wwwroot\css\admin\config.css" />
+    <Content Include="wwwroot\css\admin\config.less" />
+    <Content Include="wwwroot\css\admin\config.min.css" />
+    <Content Include="wwwroot\css\admin\skins.css" />
+    <Content Include="wwwroot\css\admin\skins.less" />
+    <Content Include="wwwroot\css\admin\skins.min.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-black.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-black.less" />
+    <Content Include="wwwroot\css\admin\Skins\skin-black.min.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-blue.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-blue.less" />
+    <Content Include="wwwroot\css\admin\Skins\skin-blue.min.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-green.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-green.less" />
+    <Content Include="wwwroot\css\admin\Skins\skin-green.min.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-purple.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-purple.less" />
+    <Content Include="wwwroot\css\admin\Skins\skin-purple.min.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-red.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-red.less" />
+    <Content Include="wwwroot\css\admin\Skins\skin-red.min.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-yellow.css" />
+    <Content Include="wwwroot\css\admin\Skins\skin-yellow.less" />
+    <Content Include="wwwroot\css\admin\Skins\skin-yellow.min.css" />
+    <Content Include="wwwroot\css\admin\users.css" />
+    <Content Include="wwwroot\css\admin\users.less" />
+    <Content Include="wwwroot\css\admin\users.min.css" />
+    <Content Include="wwwroot\css\session.less" />
+    <Content Include="wwwroot\css\site.css" />
+    <Content Include="wwwroot\css\site.min.css" />
+    <Content Include="wwwroot\images\cinema-chair.svg" />
+    <Content Include="wwwroot\images\seat.png" />
+    <Content Include="wwwroot\images\seat.svg" />
+    <Content Include="wwwroot\images\seat_booked.svg" />
+    <Content Include="wwwroot\images\seat_free - Копировать (2).svg" />
+    <Content Include="wwwroot\images\seat_free - Копировать.svg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\images\seat_free.svg" />
+    <Content Include="wwwroot\images\seat_lock.png" />
+    <Content Include="wwwroot\images\seat_purchased.svg" />
+    <Content Include="wwwroot\lib_astick\cl_BaseEvents.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\core.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\jquery.cookie.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\jquery.core.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\jquery.mask.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-checkbox-all.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-checkbox-all.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-config.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-datepicker.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-datepicker.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-dialog.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-dialog.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-extra.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-navigation.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-navigation.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-selectfield.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-selectfield.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-core.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-editable.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-extra.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-filter.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-infinite-scroll.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-locale-en.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table-locale-ru.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-table.min.css" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-tree.es5.min.js" />
+    <Content Include="wwwroot\lib_astick\mdl\mdl-tree.min.css" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
@@ -28,6 +101,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.2" />
@@ -44,11 +118,15 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
     <Folder Include="Libs\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Astick_Apps\Astick.Core.Web\Astick.Core.Web.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\images\seat_free - Копировать %282%29.svg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,58 @@
+﻿@import "Skins/skin-blue.less";
+@import "Skins/skin-black.less";
+@import "Skins/skin-purple.less";
+@import "Skins/skin-green.less";
+@import "Skins/skin-red.less";
+@import "Skins/skin-yellow.less";
+
+.skins {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.skins li {
+	float: left;
+	width: 33.33333%;
+	padding: 5px;
+}
+
+.skins a {
+	display: block;
+	box-shadow: 0 0 3px rgba(0,0,0,0.4);
+	opacity: 0.65;
+	filter: alpha(opacity=65);
+}
+
+.skins a:hover {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+.skin-top {
+	display: block;
+	width: 70%;
+	float: right;
+	height: 7px;
+}
+
+.skin-left {
+	display: block;
+	width: 30%;
+	float: left;
+	height: 27px;
+	background: #e2e1e1;
+}
+
+.skin-left_top {
+	display: block;
+	height: 9px;
+}
+
+.skin-content {
+	display: block;
+	width: 70%;
+	float: left;
+	height: 20px;
+}

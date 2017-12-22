@@ -1,0 +1,34 @@
+﻿<page-info title="Залы" />
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var $table = $('#table');
+		$table.mdlTable();
+		$table.mdlTable().data('mdl.table');
+	});
+</script>
+
+<section class="content">
+	<div class="cities">
+		<table id="table" data-locale="ru-RU"
+					 data-url="/admin/halls/TableHalls"
+					 data-key="p_ID"
+					 data-editable="true"
+					 data-sort-name="p_Name"
+					 data-filter-control="true" data-filter-submit="true"
+					 data-show-add="true"
+					 data-show-edit="true"
+					 data-show-remove="true"
+					 data-show-refresh="true">
+			<thead>
+				<tr>
+					<th data-field="p_Name" data-val-required="true" data-max="70" data-sortable="true" data-filter-control="input">Название</th>
+					<th data-field="p_Address" data-val-required="true">Адрес</th>
+					<th data-field="p_RowsCount" data-type="uint">Кол-во рядов</th>
+					<th data-field="p_RowNumbersCount" data-type="uint">Кол-во мест в ряде</th>
+					<th data-field="p_Description">Описание</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</section>

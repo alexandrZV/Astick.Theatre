@@ -1,3 +1,3 @@
 ﻿Миграция БД:
-EntityFrameworkCore\Add-Migration init -context ApplicationDbContext
-EntityFrameworkCore\Update-Database -context ApplicationDbContext
+EntityFrameworkCore\Add-Migration init -context Cl_APPDbContext
+EntityFrameworkCore\Update-Database -context Cl_APPDbContext

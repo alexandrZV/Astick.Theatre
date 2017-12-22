@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/admin/Skins/skin-black.css",
+    "inputFile": "wwwroot/css/admin/Skins/skin-black.less"
+  },
+  {
+    "outputFile": "wwwroot/css/admin/admin.css",
+    "inputFile": "wwwroot/css/admin/admin.less"
+  },
+  {
+    "outputFile": "wwwroot/css/hall.css",
+    "inputFile": "wwwroot/css/hall.less"
+  },
+  {
+    "outputFile": "wwwroot/css/session.css",
+    "inputFile": "wwwroot/css/session.less"
+  }
+]
