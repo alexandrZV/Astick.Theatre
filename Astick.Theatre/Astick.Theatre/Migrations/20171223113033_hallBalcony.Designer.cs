@@ -9,9 +9,10 @@ using Astick.Theatre.Entities;
 namespace Astick.Theatre.Migrations
 {
     [DbContext(typeof(Cl_AppDbContext))]
-    partial class Cl_AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171223113033_hallBalcony")]
+    partial class hallBalcony
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -26,41 +27,23 @@ namespace Astick.Theatre.Migrations
                     b.Property<string>("p_Address")
                         .HasColumnName("F_ADDRESS");
 
+                    b.Property<int>("p_BalconyRowNumbersCount")
+                        .HasColumnName("F_BALCONY_ROW_NUMBERS_COUNT");
+
+                    b.Property<int>("p_BalconyRowsCount")
+                        .HasColumnName("F_BALCONY_ROWS_COUNT");
+
                     b.Property<string>("p_Description")
                         .HasColumnName("F_DESC");
 
                     b.Property<string>("p_Name")
                         .HasColumnName("F_NAME");
 
-                    b.Property<int>("p_RowNumbersCountAmphitheater")
-                        .HasColumnName("F_ROW_NUMBERS_COUNT_AMPHITHEATER");
+                    b.Property<int>("p_RowNumbersCount")
+                        .HasColumnName("F_ROW_NUMBERS_COUNT");
 
-                    b.Property<int>("p_RowNumbersCountBalcony")
-                        .HasColumnName("F_ROW_NUMBERS_COUNT_Balcony");
-
-                    b.Property<int>("p_RowNumbersCountLodges")
-                        .HasColumnName("F_ROW_NUMBERS_COUNT_LODGES");
-
-                    b.Property<int>("p_RowNumbersCountMezzanine")
-                        .HasColumnName("F_ROW_NUMBERS_COUNT_MEZZANINE");
-
-                    b.Property<int>("p_RowNumbersCountParquet")
-                        .HasColumnName("F_ROW_NUMBERS_COUNT_PARQUET");
-
-                    b.Property<int>("p_RowsCountAmphitheater")
-                        .HasColumnName("F_ROWS_COUNT_AMPHITHEATER");
-
-                    b.Property<int>("p_RowsCountBalcony")
-                        .HasColumnName("F_ROWS_COUNT_Balcony");
-
-                    b.Property<int>("p_RowsCountLodges")
-                        .HasColumnName("F_ROWS_COUNT_LODGES");
-
-                    b.Property<int>("p_RowsCountMezzanine")
-                        .HasColumnName("F_ROWS_COUNT_MEZZANINE");
-
-                    b.Property<int>("p_RowsCountParquet")
-                        .HasColumnName("F_ROWS_COUNT_PARQUET");
+                    b.Property<int>("p_RowsCount")
+                        .HasColumnName("F_ROWS_COUNT");
 
                     b.HasKey("p_ID");
 
@@ -111,17 +94,11 @@ namespace Astick.Theatre.Migrations
                     b.Property<decimal>("p_Price")
                         .HasColumnName("F_PRICE");
 
-                    b.Property<string>("p_PromoCode")
-                        .HasColumnName("F_PROMO");
-
                     b.Property<int>("p_Row")
                         .HasColumnName("F_ROW");
 
                     b.Property<Guid>("p_SessionID")
                         .HasColumnName("F_SESSION_ID");
-
-                    b.Property<int>("p_Type")
-                        .HasColumnName("F_TYPE");
 
                     b.Property<int>("p_TypeEmployment")
                         .HasColumnName("F_TYPE_EMPLOYMENT");
@@ -154,20 +131,8 @@ namespace Astick.Theatre.Migrations
                     b.Property<string>("p_Name")
                         .HasColumnName("F_NAME");
 
-                    b.Property<decimal>("p_PriceAmphitheater")
-                        .HasColumnName("F_PRICE_AMPHITHEATER");
-
-                    b.Property<decimal>("p_PriceBalcony")
-                        .HasColumnName("F_PRICE_BALCONY");
-
-                    b.Property<decimal>("p_PriceLodges")
-                        .HasColumnName("F_PRICE_LODGES");
-
-                    b.Property<decimal>("p_PriceMezzanine")
-                        .HasColumnName("F_PRICE_MEZZANINE");
-
-                    b.Property<decimal>("p_PriceParquet")
-                        .HasColumnName("F_PRICE_PARQUET");
+                    b.Property<decimal>("p_Price")
+                        .HasColumnName("F_PRICE");
 
                     b.HasKey("p_ID");
 

@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Admin\Views\Sessions\SeatsByType.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\css\admin\admin.css" />
     <Content Include="wwwroot\css\admin\admin.less" />
     <Content Include="wwwroot\css\admin\admin.min.css" />
@@ -54,16 +58,8 @@
     <Content Include="wwwroot\css\session.less" />
     <Content Include="wwwroot\css\site.css" />
     <Content Include="wwwroot\css\site.min.css" />
-    <Content Include="wwwroot\images\cinema-chair.svg" />
-    <Content Include="wwwroot\images\seat.png" />
-    <Content Include="wwwroot\images\seat.svg" />
     <Content Include="wwwroot\images\seat_booked.svg" />
-    <Content Include="wwwroot\images\seat_free - Копировать (2).svg" />
-    <Content Include="wwwroot\images\seat_free - Копировать.svg">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="wwwroot\images\seat_free.svg" />
-    <Content Include="wwwroot\images\seat_lock.png" />
     <Content Include="wwwroot\images\seat_purchased.svg" />
     <Content Include="wwwroot\lib_astick\cl_BaseEvents.es5.min.js" />
     <Content Include="wwwroot\lib_astick\core.es5.min.js" />
@@ -122,11 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Astick_Apps\Astick.Core.Web\Astick.Core.Web.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="wwwroot\images\seat_free - Копировать %282%29.svg">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

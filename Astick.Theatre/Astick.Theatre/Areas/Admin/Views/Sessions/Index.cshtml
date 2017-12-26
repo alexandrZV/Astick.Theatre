@@ -1,4 +1,4 @@
-﻿<page-info title="Города" />
+﻿<page-info title="Концерты" />
 
 @using Newtonsoft.Json;
 
@@ -36,7 +36,11 @@
 					<th data-field="p_Name" data-field-link-url="/admin/sessions/[%p_ID%]" data-val-required="true" data-max="70" data-sortable="true" data-filter-control="input">Название</th>
 					<th data-field="p_Hall.p_Name" data-type="select" data-filter-read-only="true" data-select-data-type="var" data-select-field="p_HallID" data-select-data-value="m_Halls" data-select-key="p_ID" data-select-value="p_Name" data-filter-field-key="p_HallID" data-filter-control="select">Зал</th>
 					<th data-field="p_Date" data-type="date" data-val-required="true">Дата</th>
-					<th data-field="p_Price" data-type="money" data-val-required="true">Средняя стоимость</th>
+					<th data-field="p_PriceParquet" data-type="money" data-val-required="true">Цена<br />партера</th>
+					<th data-field="p_PriceAmphitheater" data-type="money" data-val-required="true">Цена<br />амфитеатра</th>
+					<th data-field="p_PriceMezzanine" data-type="money" data-val-required="true">Цена<br />бельэтажа</th>
+					<th data-field="p_PriceBalcony" data-type="money" data-val-required="true">Цена<br />болкона</th>
+					<th data-field="p_PriceLodges" data-type="money" data-val-required="true">Цена<br />ложи</th>
 					<th data-field="p_Description">Описание</th>
 				</tr>
 			</thead>

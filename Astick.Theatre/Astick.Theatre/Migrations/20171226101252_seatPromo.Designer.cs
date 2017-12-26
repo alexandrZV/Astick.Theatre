@@ -9,9 +9,10 @@ using Astick.Theatre.Entities;
 namespace Astick.Theatre.Migrations
 {
     [DbContext(typeof(Cl_AppDbContext))]
-    partial class Cl_AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171226101252_seatPromo")]
+    partial class seatPromo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

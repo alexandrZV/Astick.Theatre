@@ -5,6 +5,7 @@ using Astick.Theatre.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +24,20 @@ namespace Astick.Web.Areas.Admin.Controllers {
 				return View("~/Areas/Admin/Views/Sessions/Index.cshtml");
 		}
 
+		private void f_SetSeatsForNewHall(Cl_Session a_Session, Cl_Seat.E_Type a_Type) {
+			for (int i = 0; i < a_Session.p_Hall.f_GetRowsCount(a_Type); i++) {
+				for (int y = 0; y < a_Session.p_Hall.f_GetRowNumbersCount(a_Type); y++) {
+					m_AppDbContext.p_Seats.Add(new Cl_Seat() {
+						p_SessionID = a_Session.p_ID,
+						p_Type = a_Type,
+						p_Row = i + 1,
+						p_Number = y + 1,
+						p_Price = a_Session.f_GetPrice(a_Type)
+					});
+				}
+			}
+		}
+
 		[HttpPost]
 		public async Task<ActionResult> TableOffices(Ctrl_Table.Cl_Params<Cl_Session> a_Grid) {
 			if (a_Grid != null) {
@@ -34,21 +49,14 @@ namespace Astick.Web.Areas.Admin.Controllers {
 					if (hall != null) {
 						a_Grid.p_Object.p_Hall = hall;
 						if (a_Grid.p_Action == Ctrl_Table.E_Actions.Add) {
-							for (int i = 0; i < hall.p_RowsCount; i++) {
-								for (int y = 0; y < hall.p_RowNumbersCount; y++) {
-									m_AppDbContext.p_Seats.Add(new Cl_Seat() {
-										p_SessionID = a_Grid.p_Object.p_ID,
-										p_Row = i + 1,
-										p_Number = y + 1,
-										p_Price = a_Grid.p_Object.p_Price
-									});
-								}
+							foreach (Cl_Seat.E_Type type in Enum.GetValues(typeof(Cl_Seat.E_Type))) {
+								f_SetSeatsForNewHall(a_Grid.p_Object, type);
 							}
 						} else if (a_Grid.p_Action == Ctrl_Table.E_Actions.Edit) {
 							Cl_Seat[] seats = m_AppDbContext.p_Seats.Where(s => s.p_SessionID == a_Grid.p_Object.p_ID).ToArray();
 							for (int i = 0; i < seats.Length; i++) {
 								if (seats[i].p_TypeEmployment == Cl_Seat.E_TypeEmployment.Free) {
-									seats[i].p_Price = a_Grid.p_Object.p_Price;
+									seats[i].p_Price = a_Grid.p_Object.f_GetPrice(seats[i].p_Type);
 								}
 							}
 						}
@@ -57,11 +65,6 @@ namespace Astick.Web.Areas.Admin.Controllers {
 						throw new Exception("Не найден зал");
 					}
 				}
-				//if (result is JsonResult) {
-				//	JsonResult jsonResult = (JsonResult)result;
-				//	Cl_Session resSession = (Cl_Session)jsonResult.Value;
-				//	resSession.p_Hall = 
-				//}
 				return result;
 			}
 			return new EmptyResult();
@@ -78,6 +81,31 @@ namespace Astick.Web.Areas.Admin.Controllers {
 			} else {
 				throw new Exception("Сеанс не найден");
 			}
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> f_ActionSeat(Guid[] a_SeatsID, string a_UserFIO, string a_Mobile, string a_Promo, string a_Comment, Cl_Seat.E_TypeEmployment a_TypeEmployment) {
+			List<Cl_Seat> seats = new List<Cl_Seat>();
+			foreach (Guid seatID in a_SeatsID) {
+				Cl_Seat seat = m_AppDbContext.p_Seats.FirstOrDefault(s => s.p_ID == seatID);
+				if (seat != null) {
+					if (a_TypeEmployment == Cl_Seat.E_TypeEmployment.Free) {
+						seat.p_UserFIO = "";
+						seat.p_Mobile = "";
+						seat.p_TypeEmployment = Cl_Seat.E_TypeEmployment.Free;
+						seat.p_Comment = "";
+					} else {
+						seat.p_UserFIO = a_UserFIO;
+						seat.p_Mobile = a_Mobile;
+						seat.p_Promo = a_Promo;
+						seat.p_TypeEmployment = a_TypeEmployment;
+						seat.p_Comment = a_Comment;
+					}
+					seats.Add(seat);
+				}
+			}
+			await m_AppDbContext.SaveChangesAsync();
+			return Json(seats);
 		}
 
 		[HttpPost]
@@ -107,18 +135,21 @@ namespace Astick.Web.Areas.Admin.Controllers {
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> f_RemoveSeat(Guid a_SeatID) {
-			Cl_Seat seat = m_AppDbContext.p_Seats.Include(s => s.p_Session).FirstOrDefault(s => s.p_ID == a_SeatID);
-			if (seat != null) {
-				seat.p_UserFIO = "";
-				seat.p_Mobile = "";
-				seat.p_TypeEmployment = Cl_Seat.E_TypeEmployment.Free;
-				seat.p_Comment = "";
-				await m_AppDbContext.SaveChangesAsync();
-				return Json(seat);
-			} else {
-				throw new Exception("Место не найдено");
+		public async Task<ActionResult> f_RemoveSeats(Guid[] a_SeatsID) {
+			List<Cl_Seat> seats = new List<Cl_Seat>();
+			foreach (Guid seatID in a_SeatsID) {
+				Cl_Seat seat = m_AppDbContext.p_Seats.FirstOrDefault(s => s.p_ID == seatID);
+				if (seat != null) {
+					seat.p_UserFIO = "";
+					seat.p_Mobile = "";
+					seat.p_Promo = "";
+					seat.p_TypeEmployment = Cl_Seat.E_TypeEmployment.Free;
+					seat.p_Comment = "";
+					seats.Add(seat);
+				}
 			}
+			await m_AppDbContext.SaveChangesAsync();
+			return Json(seats);
 		}
 	}
 }

@@ -1,0 +1,12 @@
+@model Cl_Session
+<tr class="hall_schema_row">
+	<td class="hall_schema_row_title">Ряд №@i</td>
+	@for (int y = 1; y <= Model.p_Hall.f_GetRowNumbersCount(type); y++) {
+		Cl_Seat seat = Model.p_Seats.FirstOrDefault(s => s.p_Type == type && s.p_Row == i && s.p_Number == y);
+		<td class="hall_schema_row_number @if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Booked) { <text>hall_schema_row_number_booked</text> } else if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Purchased) { <text>hall_schema_row_number_purchased</text> }" data-toggle="modal" data-target="#modalSeatEdit" data-id="@seat.p_ID" data-row="@i" data-col="@y">
+			<div class="hall_schema_row_number_val">@y</div>
+			<div class="hall_schema_row_number_price"><span class="hall_schema_row_number_price_val">@((int)seat.p_Price)</span> руб.</div>
+		</td>
+	}
+</tr>
+				}

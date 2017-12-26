@@ -9,9 +9,10 @@ using Astick.Theatre.Entities;
 namespace Astick.Theatre.Migrations
 {
     [DbContext(typeof(Cl_AppDbContext))]
-    partial class Cl_AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171223123038_hallRowTypes")]
+    partial class hallRowTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -110,9 +111,6 @@ namespace Astick.Theatre.Migrations
 
                     b.Property<decimal>("p_Price")
                         .HasColumnName("F_PRICE");
-
-                    b.Property<string>("p_PromoCode")
-                        .HasColumnName("F_PROMO");
 
                     b.Property<int>("p_Row")
                         .HasColumnName("F_ROW");
