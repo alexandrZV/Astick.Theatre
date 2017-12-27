@@ -33,7 +33,6 @@
 <body>
 	<page-info title="Концерт" />
 	<div id="hall">
-		<h3>@string.Format("Концерт \"{0}\" {1}", Model.p_Hall.p_Name, Model.p_Date.ToString("dd.MM.yyyy"))</h3>
 		@{
 			Array typesSeats = Enum.GetValues(typeof(Cl_Seat.E_Type));
 			Array.Reverse(typesSeats);
@@ -52,12 +51,23 @@
 				}
 			}
 		}
+		<h3>@string.Format("Концерт \"{0}\" {1}", Model.p_Hall.p_Name, Model.p_Date.ToString("dd.MM.yyyy"))</h3>
+		<div class="hall_legend">
+			@foreach (Cl_Seat.E_Type type in typesSeats) {
+				if (Model.p_Hall.f_GetRowsCount(type) > 0) {
+				<div class="hall_legend_item hall_legend_item_@Enum.GetName(typeof(Cl_Seat.E_Type), type).ToLower()">
+					<div class="hall_legend_item_img"></div>
+					<div class="hall_legend_item_val"> - @Model.f_GetPrice(type) руб.</div>
+				</div>
+				}
+			}
+		</div>
 		<table class="hall_schema">
 			@{
 				int numberRow = countRows;
 				foreach (Cl_Seat.E_Type type in typesSeats) {
 					for (int i = 1; i <= Model.p_Hall.f_GetRowsCount(type); i++) {
-						string classGroupend = (type == Cl_Seat.E_Type.Balcony || numberRow == 1) ? "hall_schema_row_groupend" : "";
+						string classGroupend = ((type == Cl_Seat.E_Type.Balcony && i == Model.p_Hall.f_GetRowsCount(type)) || numberRow == 1) ? "hall_schema_row_groupend" : "";
 						<tr class="hall_schema_row hall_schema_row_@Enum.GetName(typeof(Cl_Seat.E_Type), type).ToLower() @classGroupend">
 							<td class="hall_schema_cell hall_schema_row_header"><div class="hall_schema_cell_content">@numberRow</div></td>
 							<td class="hall_schema_row_header_sep">&nbsp;</td>
@@ -112,7 +122,7 @@
 			</table>*@
 		<div id="modalSeatEdit" class="modal fade" role="dialog">
 			<div class="modal-dialog">
-				<form class="modal-content" action="#">
+				<form class="modal-content" action="javascript:void(0);">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">Редактирование места</h4>
@@ -207,7 +217,7 @@
 			m_SeatSelect = null;
 
 			var selects$ = $('.hall_schema_seat_select');
-			if (selects$.length === 1) {
+			if (selects$.length === 1 && (selects$.hasClass('hall_schema_seat_booked') || selects$.hasClass('hall_schema_seat_purchased'))) {
 				m_SeatSelect = f_GetSeatFromCell(selects$[0]);
 			} else {
 				m_SeatSelect = null;

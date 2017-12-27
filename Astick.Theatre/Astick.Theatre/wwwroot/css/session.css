@@ -23,8 +23,25 @@
   width: 100%;
   table-layout: fixed;
 }
+.hall_legend {
+  padding: 15px 0;
+}
+.hall_legend_item {
+  display: inline-block;
+  margin-right: 20px;
+}
+.hall_legend_item_img {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.hall_legend_item_val {
+  display: inline-block;
+  vertical-align: middle;
+}
 .hall_schema_row_groupend .hall_schema_cell {
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 .hall_schema_row .hall_schema_cell_content {
   margin: 3px;
@@ -49,16 +66,29 @@
   border: 2px solid #55635e;
 }
 .hall_schema_row_parquet .hall_schema_row_header,
-.hall_schema_row_parquet .hall_schema_cell_content {
+.hall_schema_row_parquet .hall_schema_cell_content,
+.hall_legend_item_parquet .hall_legend_item_img {
   background-color: #f2dc87;
 }
 .hall_schema_row_amphitheater .hall_schema_row_header,
-.hall_schema_row_amphitheater .hall_schema_cell_content {
+.hall_schema_row_amphitheater .hall_schema_cell_content,
+.hall_legend_item_amphitheater .hall_legend_item_img {
   background-color: #efbfef;
 }
+.hall_schema_row_mezzanine .hall_schema_row_header,
+.hall_schema_row_mezzanine .hall_schema_cell_content,
+.hall_legend_item_mezzanine .hall_legend_item_img {
+  background-color: #ccb3ff;
+}
 .hall_schema_row_balcony .hall_schema_row_header,
-.hall_schema_row_balcony .hall_schema_cell_content {
+.hall_schema_row_balcony .hall_schema_cell_content,
+.hall_legend_item_balcony .hall_legend_item_img {
   background-color: #c0efdf;
+}
+.hall_schema_row_lodges .hall_schema_row_header,
+.hall_schema_row_lodges .hall_schema_cell_content,
+.hall_legend_item_lodges .hall_legend_item_img {
+  background-color: #99e6ff;
 }
 .hall_schema_row .hall_schema_seat_booked {
   background-color: #ffad33;
