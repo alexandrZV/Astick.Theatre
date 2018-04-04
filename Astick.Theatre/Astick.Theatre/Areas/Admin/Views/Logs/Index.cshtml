@@ -1,0 +1,67 @@
+﻿<page-info title="Логи" />
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var m_TableLogs = $('#table').mdlTable().data('mdl.table');
+
+		var elFilterDateStart = document.getElementById('filters_dateStart');
+		var elFilterDateEnd = document.getElementById('filters_dateEnd');
+		var dateStart = $.cookie('m_LogsDateStart');
+		if (dateStart === null) {
+			dateStart = moment().day(-7).format('L');
+		}
+		var dateEnd = $.cookie('m_LogsDateEnd');
+		if (dateEnd === null) {
+			dateEnd = moment().format('L');
+		}
+		elFilterDateStart.value = dateStart;
+		elFilterDateEnd.value = dateEnd;
+		componentHandler.upgradeElement(elFilterDateStart.parentElement, "MaterialDatefield");
+		componentHandler.upgradeElement(elFilterDateEnd.parentElement, "MaterialDatefield");
+		elFilterDateStart.onchange = function () {
+			$.cookie('m_LogsDateStart', this.value);
+			m_TableLogs.f_Refresh();
+		};
+		elFilterDateEnd.onchange = function () {
+			$.cookie('m_LogsDateEnd', this.value);
+			m_TableLogs.f_Refresh();
+		};
+	});
+</script>
+
+<div class="filters">
+	<div class="filters_items filters_dates">
+		<div class="mdl-datefield mdl-datefield--floating-label" style="width: 100px">
+			<input id="filters_dateStart" class="mdl-datefield__input" data-clear-button="false" data-now-button="true" />
+			<label class="mdl-datefield__label" for="filters_dateStart">Начало периода</label>
+		</div>
+		<div class="mdl-datefield mdl-datefield--floating-label" style="width: 100px">
+			<input id="filters_dateEnd" class="mdl-datefield__input" data-clear-button="false" data-now-button="true" />
+			<label class="mdl-datefield__label" for="filters_dateEnd">Конец периода</label>
+		</div>
+	</div>
+</div>
+<section class="content">
+	<div class="loges">
+		<table id="table" data-locale="ru-RU"
+					 data-url="/admin/Logs/TableLogsHalls"
+					 data-key="p_ID"
+					 data-page-size="30"
+					 data-editable="true"
+					 data-sort-name="p_Date"
+					 data-sort-order="desc"
+					 data-filter-control="true" data-filter-submit="true" data-show-filter-clear="true"
+					 data-show-refresh="true"
+					 data-total-fields="p_Price">
+			<thead>
+				<tr>
+					<th data-field="p_Date" data-type="datetime" data-align="center" data-sortable="true">Время</th>
+					<th data-field="p_User.p_FIO" data-sortable="true" data-filter-control="input">Пользователь</th>
+					<th data-field="p_TypeEmployment" data-type="select" data-select-data-type="enum" data-select-data-value="{'0':'Свободно', '1':'Забронирован', '2':'Приобретен'}" data-filter-control="select">Действие</th>
+					<th data-field="p_Price" data-type="money" data-align="center" data-sortable="true" data-total="true">Сумма</th>
+					<th data-field="p_Description">Описание</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</section>

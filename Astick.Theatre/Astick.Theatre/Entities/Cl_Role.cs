@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Astick.Core.Web;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,7 +7,7 @@ namespace Astick.Theatre.Entities {
 	/// <summary>
 	/// Класс роли пользователя
 	/// </summary>
-	public class Cl_Role : IdentityRole<Guid> {
+	public class Cl_Role : IdentityRole<Guid>, I_ModelBD {
 		public Cl_Role() { Id = Guid.NewGuid(); }
 		public Cl_Role(string a_Name) : this() { Name = a_Name; }
 		/// <summary>Получает ID роли пользователей</summary>

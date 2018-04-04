@@ -1,3 +1,8 @@
 ﻿Миграция БД:
-EntityFrameworkCore\Add-Migration init -context Cl_APPDbContext
-EntityFrameworkCore\Update-Database -context Cl_APPDbContext
+Add-Migration init -context Cl_APPDbContext
+Update-Database -context Cl_APPDbContext
+
+
+
+Install-Package Microsoft.EntityFrameworkCore.Tools
+dotnet ef migrations add init

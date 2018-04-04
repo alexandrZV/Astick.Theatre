@@ -20,6 +20,8 @@ function Cl_ARM() {
 	this.e_ChangeARMDateStart = this.f_AddEvent('e_ChangeARMDateStart');
 	var that = this;
 
+	moment.locale('ru');
+
 	if (this.p_IsDateStart) {
 		this.p_ARMDateStart = $.cookie('m_ARMDateStart');
 		if (this.p_ARMDateStart == null) {

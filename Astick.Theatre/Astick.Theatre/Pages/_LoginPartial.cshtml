@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Astick.Theatre.Data
+@using Astick.Theatre.Entities
+@inject SignInManager<Cl_User> SignInManager
+@inject UserManager<Cl_User> UserManager
+
+@if (SignInManager.IsSignedIn(User)) {
+	<form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+		<ul class="nav navbar-nav navbar-right">
+			<li>
+				<a asp-page="/Account/Manage/Index" title="Manage">Привет @UserManager.GetUserName(User)!</a>
+			</li>
+			<li>
+				<button type="submit" class="btn btn-link navbar-btn navbar-link">Выход</button>
+			</li>
+		</ul>
+	</form>
+} else {
+	<ul class="nav navbar-nav navbar-right">
+		<li><a asp-page="/Account/Register">Регистрация</a></li>
+		<li><a asp-page="/Account/Login">Вход</a></li>
+	</ul>
+}

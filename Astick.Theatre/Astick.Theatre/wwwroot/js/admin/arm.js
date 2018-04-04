@@ -18,7 +18,9 @@ function Cl_ARM() {
 	this.p_IsInit = false;
   this.e_Init = this.f_AddEvent('e_Init');
   this.e_ChangeARMDateStart = this.f_AddEvent('e_ChangeARMDateStart');
-	var that = this
+  var that = this
+
+  moment.locale('ru');
 
   if (this.p_IsDateStart) {
     this.p_ARMDateStart = $.cookie('m_ARMDateStart');

@@ -7,6 +7,7 @@
 	var m_JsonSerializerSettings = new JsonSerializerSettings {
 		ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 	};
+	bool m_ReadOnly = Model.p_Date < DateTime.Now;
 }
 
 <!DOCTYPE html>
@@ -66,7 +67,7 @@
 			@{
 				int numberRow = countRows;
 				foreach (Cl_Seat.E_Type type in typesSeats) {
-					for (int i = 1; i <= Model.p_Hall.f_GetRowsCount(type); i++) {
+					for (int i = Model.p_Hall.f_GetRowsCount(type); i > 0; i--) {
 						string classGroupend = ((type == Cl_Seat.E_Type.Balcony && i == Model.p_Hall.f_GetRowsCount(type)) || numberRow == 1) ? "hall_schema_row_groupend" : "";
 						<tr class="hall_schema_row hall_schema_row_@Enum.GetName(typeof(Cl_Seat.E_Type), type).ToLower() @classGroupend">
 							<td class="hall_schema_cell hall_schema_row_header"><div class="hall_schema_cell_content">@numberRow</div></td>
@@ -76,7 +77,7 @@
 							}
 							@for (int y = Model.p_Hall.f_GetRowNumbersCount(type); y >= 1; y--) {
 								Cl_Seat seat = Model.p_Seats.FirstOrDefault(s => s.p_Type == type && s.p_Row == i && s.p_Number == y);
-								<td class="hall_schema_cell"><div class="hall_schema_cell_content hall_schema_seat @if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Booked) { <text>hall_schema_seat_booked</text> } else if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Purchased) { <text>hall_schema_seat_purchased</text> }" data-id="@seat.p_ID" data-fio="@seat.p_UserFIO" data-mobile="@seat.p_Mobile" data-promo="@seat.p_Promo" data-price="@((int)seat.p_Price)" data-comment="@seat.p_Comment">@y</div></td>
+								<td class="hall_schema_cell"><div class="hall_schema_cell_content hall_schema_seat @if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Booked) { <text>hall_schema_seat_booked</text> } else if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Purchased) { <text>hall_schema_seat_purchased</text> }" data-id="@seat.p_ID" data-fio="@seat.p_UserFIO" data-mobile="@seat.p_Mobile" @if (seat.p_PromoCode != null) { <text>data-promoCodeId="@seat.p_PromoCode.p_ID" data-promoCode="@seat.p_PromoCode.p_Code" data-promoCodeName="@seat.p_PromoCode.p_Name" data-promoCodeDiscount="@seat.p_PromoCode.p_Discount"</text> } data-price="@((int)seat.p_Price)" data-comment="@seat.p_Comment">@y</div></td>
 							}
 						</tr>
 						numberRow--;
@@ -98,28 +99,6 @@
 			<button type="submit" class="btn btn-primary hidden" id="bSeatSell">Продать</button>
 			<button type="button" class="btn btn-danger hidden" id="bSeatUnLock">Освободить</button>
 		</div>
-
-
-		@*<table class="hall_schema">
-				@{
-					Array typesSeats = Enum.GetValues(typeof(Cl_Seat.E_Type));
-					Array.Reverse(typesSeats);
-					foreach (Cl_Seat.E_Type type in typesSeats) {
-						for (int i = 1; i <= Model.p_Hall.f_GetRowsCount(type); i++) {
-						<tr class="hall_schema_row">
-							<td class="hall_schema_row_title">Ряд №@i</td>
-							@for (int y = 1; y <= Model.p_Hall.f_GetRowNumbersCount(type); y++) {
-							Cl_Seat seat = Model.p_Seats.FirstOrDefault(s => s.p_Type == type && s.p_Row == i && s.p_Number == y);
-							<td class="hall_schema_row_number @if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Booked) { <text>hall_schema_row_number_booked</text> } else if (seat.p_TypeEmployment == Cl_Seat.E_TypeEmployment.Purchased) { <text>hall_schema_row_number_purchased</text> }" data-toggle="modal" data-target="#modalSeatEdit" data-id="@seat.p_ID" data-row="@i" data-col="@y">
-								<div class="hall_schema_row_number_val">@y</div>
-								<div class="hall_schema_row_number_price"><span class="hall_schema_row_number_price_val">@((int)seat.p_Price)</span> руб.</div>
-							</td>
-						}
-						</tr>
-						}
-					}
-				}
-			</table>*@
 		<div id="modalSeatEdit" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<form class="modal-content" action="javascript:void(0);">
@@ -138,7 +117,7 @@
 						</div>
 						<div class="form-group">
 							<label for="elPromo">Промо код</label>
-							<input type="text" class="form-control" id="elPromo" placeholder="Промо код">
+							<input type="text" class="form-control" id="elPromo" placeholder="Промо код" autocomplete="off">
 						</div>
 						<div class="form-group">
 							<label for="elPrice">Стоимость</label>
@@ -161,6 +140,7 @@
 	<environment names="Development">
 		<script src="~/lib/jquery/dist/jquery.js"></script>
 		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap3-typeahead.min.js"></script>
 		<script src="~/js/site.js" asp-append-version="true"></script>
 	</environment>
 	<environment names="Staging,Production">
@@ -176,6 +156,7 @@
 						crossorigin="anonymous"
 						integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
 		</script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap3-typeahead.min.js"></script>
 		<script src="~/js/site.min.js" asp-append-version="true"></script>
 	</environment>
 	<script type="text/javascript">
@@ -204,13 +185,22 @@
 			seat.p_ID = $(a_Cell).attr("data-id");
 			seat.p_UserFIO = $(a_Cell).attr("data-fio");
 			seat.p_Mobile = $(a_Cell).attr("data-mobile");
-			seat.p_Promo = $(a_Cell).attr("data-promo");
+
+			if ($(a_Cell).attr("data-promoCodeId") !== undefined) {
+				seat.p_PromoCode = new Object();
+				seat.p_PromoCode.p_ID = $(a_Cell).attr("data-promoCodeId");
+				seat.p_PromoCode.p_Code = $(a_Cell).attr("data-promoCode")
+				seat.p_PromoCode.p_Name = $(a_Cell).attr("data-promoCodeName")
+				seat.p_PromoCode.p_Discount = $(a_Cell).attr("data-promoCodeDiscount")
+			}
+
 			seat.p_Price = parseInt($(a_Cell).attr("data-price"));
 			seat.p_Comment = $(a_Cell).attr("data-comment");
 			return seat;
 		}
 
 		function f_ResetSelectors() {
+			@if (!m_ReadOnly) { <text>
 			m_SeatsLock = [];
 			m_SeatsSell = [];
 			m_SeatsUnlock = [];
@@ -252,6 +242,7 @@
 			} else {
 				elBSeatUnLock.classList.add('hidden');
 			}
+			</text>}
 		}
 
 		$('.hall_schema_seat').click(function () {
@@ -264,19 +255,79 @@
 			}
 		});
 
+		$(elIPromo).keyup(function () {
+			var sum = 0;
+			for (var i in m_SeatsSell) {
+				sum += m_SeatsSell[i].p_Price;
+			}
+			$(elIPromo).removeAttr('promoCodeID');
+			elIPrice.value = sum;
+		});
+
+		function f_SetPromoCode(a_PromoCodeID, a_PromoCode, a_PromoCodeName, a_Discount) {
+			var sum = 0;
+			if (m_SeatSelect !== null) {
+				sum = m_SeatSelect.p_Price;
+			} else {
+				for (var i in m_SeatsSell) {
+					sum += m_SeatsSell[i].p_Price;
+				}
+			}
+			if (a_PromoCodeID !== undefined && a_PromoCode !== undefined && a_PromoCodeName !== undefined && a_Discount !== undefined) {
+				$(elIPromo).attr('promoCodeID', a_PromoCodeID);
+				elIPromo.value = a_PromoCode + " (" + a_PromoCodeName + ')';
+				elIPrice.value = ((sum * (100 - parseFloat(a_Discount))) / 100).toFixed();
+			} else {
+				$(elIPromo).removeAttr('promoCodeID');
+				elIPromo.value = "";
+				elIPrice.value = sum;
+			}
+		}
+
+		$(elIPromo).typeahead({
+			source: function (query, process) {
+				if (query.length > 2) {
+					return $.get('/admin/PromoCodes/SelectPromoCodes', { 'limit': 10, 'query': query, 'sort': 'p_Name' },
+						function (data) {
+							if (data.error === undefined) {
+								var promoCodes = new Array();
+								$.each(data.rows, function (i, promoCode) {
+									promoCodes.push(promoCode.p_ID + "_" + promoCode.p_Code + "_" + promoCode.p_Name + "_" + promoCode.p_Discount);
+								})
+								return process(promoCodes);
+							} else {
+								alert(data.error);
+							}
+						});
+				}
+			}, highlighter: function (item) {
+				var parts = item.split('_');
+				return parts[1] + " (" + parts[2] + ')';
+			}, updater: function (item) {
+				var parts = item.split('_');
+				f_SetPromoCode(parts[0], parts[1], parts[2], parts[3]);
+				return parts[1] + " (" + parts[2] + ')';
+			}
+		});
+
 		var f_ActionSeat = function (a_Seats, a_TypeEmployment) {
 			if (a_Seats.length > 0) {
 				var ids = [];
 				for (var i in a_Seats) {
 					ids.push(a_Seats[i].p_ID);
 				}
-				$.post("/admin/sessions/f_ActionSeat", { a_SeatsID: ids, a_UserFIO: elIFIO.value, a_Mobile: elIMobile.value, a_Promo: elIPromo.value, a_TypeEmployment: a_TypeEmployment, a_Comment: elIComment.value }, function (data) {
+				$.post("/admin/sessions/f_ActionSeat", { a_SeatsID: ids, a_UserFIO: elIFIO.value, a_Mobile: elIMobile.value, a_PromoCodeID: elIPromo.getAttribute('promoCodeID'), a_TypeEmployment: a_TypeEmployment, a_Comment: elIComment.value }, function (data) {
 					if (data.error === undefined) {
 						for (var i in data) {
 							var elSelects$ = $('.hall_schema_seat[data-id = "' + data[i].p_ID + '"]');
 							elSelects$.attr('data-fio', data[i].p_UserFIO);
 							elSelects$.attr('data-mobile', data[i].p_Mobile);
-							elSelects$.attr('data-promo', data[i].p_Promo);
+							if (data[i].p_PromoCode != undefined) {
+								elSelects$.attr('data-promoCodeId', data[i].p_PromoCode.p_ID);
+								elSelects$.attr('data-promoCode', data[i].p_PromoCode.p_Code);
+								elSelects$.attr('data-promoCodeName', data[i].p_PromoCode.p_Name);
+								elSelects$.attr('data-promoCodeDiscount', data[i].p_PromoCode.p_Discount);
+							}
 							elSelects$.attr('data-price', data[i].p_Price);
 							elSelects$.attr('data-comment', data[i].p_Comment);
 							if (data[i].p_TypeEmployment === @Cl_Seat.E_TypeEmployment.Booked.GetHashCode()) {
@@ -302,8 +353,11 @@
 				elIComment.readOnly = true;
 				elIFIO.value = m_SeatSelect.p_UserFIO;
 				elIMobile.value = m_SeatSelect.p_Mobile;
-				elIPromo.value = m_SeatSelect.p_Promo;
-				elIPrice.value = m_SeatSelect.p_Price;
+				if (m_SeatSelect.p_PromoCode !== undefined) {
+					f_SetPromoCode(m_SeatSelect.p_PromoCode.p_ID, m_SeatSelect.p_PromoCode.p_Code, m_SeatSelect.p_PromoCode.p_Name, m_SeatSelect.p_PromoCode.p_Discount);
+				} else {
+					f_SetPromoCode();
+				}
 				elIComment.value = m_SeatSelect.p_Comment;
 				if (elBModalSeatOk.classList.contains('hidden')) elBModalSeatOk.classList.remove('hidden');
 				elBModalSeatAction.classList.add('hidden');
@@ -330,6 +384,7 @@
 			elIMobile.readOnly = false;
 			elIPromo.readOnly = false;
 			elIComment.readOnly = false;
+			f_SetPromoCode();
 			elBModalSeatOk.classList.add('hidden');
 			if (elBModalSeatAction.classList.contains('hidden')) elBModalSeatAction.classList.remove('hidden');
 			if (elBModalSeatCancel.classList.contains('hidden')) elBModalSeatCancel.classList.remove('hidden');
@@ -354,6 +409,7 @@
 			elIMobile.readOnly = false;
 			elIPromo.readOnly = false;
 			elIComment.readOnly = false;
+			f_SetPromoCode();
 			elBModalSeatOk.classList.add('hidden');
 			if (elBModalSeatAction.classList.contains('hidden')) elBModalSeatAction.classList.remove('hidden');
 			if (elBModalSeatCancel.classList.contains('hidden')) elBModalSeatCancel.classList.remove('hidden');
@@ -394,129 +450,5 @@
 				}
 			}
 		});
-
-
-		@*var elIFIO = document.getElementById("elFIO");
-		var elIMobile = document.getElementById("elMobile");
-		var elIPrice = document.getElementById("elPrice");
-		var elIComment = document.getElementById("elComment");
-		var elBSeatLock = document.getElementById("bSeatLock");
-		var elBSeatSell = document.getElementById("bSeatSell");
-		var elBSeatEdit = document.getElementById("bSeatEdit");
-		var elBSeatUnLock = document.getElementById("bSeatUnLock");
-		var f_LockSeat = function(a_Row, a_Col, a_TypeEmployment) {
-			$.post("/admin/sessions/f_SetSeat", { p_SessionID: '@Model.p_ID', p_Row: a_Row, p_Number: a_Col, p_UserFIO: elIFIO.value, p_Mobile: elIMobile.value, p_Price: elIPrice.value, p_TypeEmployment: a_TypeEmployment, p_Comment: elIComment.value }, function (data) {
-				if (data.error === undefined) {
-					var seat;
-					for (var i in m_Seats) {
-						if (m_Seats[i].p_Row === data.p_Row && m_Seats[i].p_Number === data.p_Number) {
-							seat = m_Seats[i];
-							break;
-						}
-					}
-					if (seat !== undefined) {
-						seat.p_UserFIO = data.p_UserFIO;
-						seat.p_Mobile = data.p_Mobile;
-						seat.p_Price = data.p_Price;
-						seat.p_Comment = data.p_Comment;
-					} else {
-						m_Seats.push(data);
-						seat = data;
-					}
-					if (a_TypeEmployment === @Cl_Seat.E_TypeEmployment.Booked.GetHashCode()) {
-						$('.hall_schema_row_number[data-row = "' + a_Row + '"][data-col = "' + a_Col + '"]').addClass('hall_schema_row_number_booked');
-					} else if (a_TypeEmployment === @Cl_Seat.E_TypeEmployment.Purchased.GetHashCode()) {
-						$('.hall_schema_row_number[data-row = "' + a_Row + '"][data-col = "' + a_Col + '"]').addClass('hall_schema_row_number_purchased');
-					}
-					$('.hall_schema_row_number[data-row = "' + a_Row + '"][data-col = "' + a_Col + '"] .hall_schema_row_number_price_val').html(seat.p_Price);
-				} else {
-					alert(data.error);
-				}
-			});
-		}
-		elBSeatLock.addEventListener("click", function () {
-			if (document.querySelector("#modalSeatEdit form").checkValidity()) {
-				var row = parseInt(elBSeatLock.getAttribute('data-row'));
-				var col = parseInt(elBSeatLock.getAttribute('data-col'));
-				f_LockSeat(row, col, @Cl_Seat.E_TypeEmployment.Booked.GetHashCode());
-				$("#modalSeatEdit").modal("hide");
-			}
-		});
-		elBSeatSell.addEventListener("click", function () {
-			if (document.querySelector("#modalSeatEdit form").checkValidity()) {
-				var row = parseInt(elBSeatLock.getAttribute('data-row'));
-				var col = parseInt(elBSeatLock.getAttribute('data-col'));
-				f_LockSeat(row, col, @Cl_Seat.E_TypeEmployment.Purchased.GetHashCode());
-				$("#modalSeatEdit").modal("hide");
-			}
-		});
-		elBSeatEdit.addEventListener("click", function () {
-			if (document.querySelector("#modalSeatEdit form").checkValidity()) {
-				var row = parseInt(elBSeatLock.getAttribute('data-row'));
-				var col = parseInt(elBSeatLock.getAttribute('data-col'));
-				f_LockSeat(row, col, @Cl_Seat.E_TypeEmployment.Free.GetHashCode());
-				$("#modalSeatEdit").modal("hide");
-			}
-		});
-		elBSeatUnLock.addEventListener("click", function () {
-			if (confirm("Вы уверены, что хотите снять бронь места?")) {
-				var seatID = elBSeatUnLock.getAttribute('data-id');
-				$.post("/admin/sessions/f_RemoveSeat", { a_SeatID: seatID }, function (data) {
-					if (data.error === undefined) {
-						var index;
-						for (var i in m_Seats) {
-							if (m_Seats[i].p_Row === data.p_Row && m_Seats[i].p_Number === data.p_Number) {
-								index = i;
-								break;
-							}
-						}
-						if (index !== undefined) {
-							m_Seats.splice(index, 1);
-						}
-						$('.hall_schema_row_number[data-row = "' + data.p_Row + '"][data-col = "' + data.p_Number + '"]').removeClass('hall_schema_row_number_booked').removeClass('hall_schema_row_number_purchased');
-					} else {
-						alert(data.error);
-					}
-				});
-			}
-		});
-		$('#modalSeatEdit').on('show.bs.modal', function (event) {
-			var button$ = $(event.relatedTarget)
-			var row = parseInt(button$.data('row'));
-			var col = parseInt(button$.data('col'));
-			var seatId = button$.data('id');
-			elBSeatLock.setAttribute('data-row', row);
-			elBSeatLock.setAttribute('data-col', col);
-			elBSeatSell.setAttribute('data-row', row);
-			elBSeatSell.setAttribute('data-col', col);
-			elBSeatEdit.setAttribute('data-row', row);
-			elBSeatEdit.setAttribute('data-col', col);
-			elBSeatUnLock.setAttribute('data-id', seatId);
-			var seat;
-			for (var i in m_Seats) {
-				if (m_Seats[i].p_Row === row && m_Seats[i].p_Number === col) {
-					seat = m_Seats[i];
-					break;
-				}
-			}
-			if (seat !== undefined) {
-				elIFIO.value = seat.p_UserFIO;
-				elIMobile.value = seat.p_Mobile;
-				elIPrice.value = seat.p_Price;
-				elIComment.value = seat.p_Comment;
-				if (seat.p_TypeEmployment === @Cl_Seat.E_TypeEmployment.Free.GetHashCode()) {
-					if (elBSeatEdit.classList.contains('hidden')) elBSeatEdit.classList.remove('hidden');
-					elBSeatUnLock.classList.add('hidden');
-				} else {
-					elBSeatEdit.classList.add('hidden');
-					if (elBSeatUnLock.classList.contains('hidden')) elBSeatUnLock.classList.remove('hidden');
-				}
-			} else {
-				elIFIO.value = "";
-				elIMobile.value = "";
-				elIPrice.value = "";
-				elIComment.value = "";
-			}
-		});*@
 	</script>
 </body>

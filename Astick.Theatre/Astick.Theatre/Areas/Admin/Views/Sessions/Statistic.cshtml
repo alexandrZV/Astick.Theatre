@@ -1,0 +1,40 @@
+﻿<page-info title="Статистика" />
+
+@using Newtonsoft.Json;
+
+@{
+	Cl_Hall[] halls = m_AppDbContext.p_Halls.ToArray();
+	var m_JsonSerializerSettings = new JsonSerializerSettings {
+		ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+	};
+
+}
+
+<script type="text/javascript">
+	var m_Halls = @Html.Raw(JsonConvert.SerializeObject(halls, m_JsonSerializerSettings));
+	$(document).ready(function () {
+		var $table = $('#table');
+		$table.mdlTable();
+		$table.mdlTable().data('mdl.table');
+	});
+</script>
+
+<section class="content">
+	<div class="cities">
+		<table id="table" data-locale="ru-RU"
+					 data-url="/admin/sessions/TableSessionStatistic"
+					 data-key="p_Session.p_ID"
+					 data-sort-name="p_Session.p_Name"
+					 data-filter-control="true" data-filter-submit="true" data-show-filter-clear="true">
+			<thead>
+				<tr>
+					<th data-field="p_Session.p_Name" data-field-link-url="/admin/sessions/[%p_Session.p_ID%]" data-val-required="true" data-max="70" data-sortable="true" data-filter-control="input">Название</th>
+					<th data-field="p_Session.p_Hall.p_Name" data-type="select" data-filter-read-only="true" data-select-data-type="var" data-select-field="p_HallID" data-select-data-value="m_Halls" data-select-key="p_Session.p_Hall.p_ID" data-select-value="p_Name" data-filter-field-key="p_HallID" data-filter-control="selects">Зал</th>
+					<th data-field="p_Session.p_Date" data-type="datetime" data-val-required="true">Дата</th>
+					<th data-field="p_TotalCount" data-type="uint" data-align="center" data-val-required="true">Кол-во мест</th>
+					<th data-field="p_TotalSum" data-type="money" data-val-required="true">Продано</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</section>

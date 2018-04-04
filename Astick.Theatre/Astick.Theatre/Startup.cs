@@ -1,11 +1,11 @@
 ﻿using Astick.Core.Web.Services;
 using Astick.Theatre.Data;
 using Astick.Theatre.Entities;
+using Astick.Theatre.ErrorsDescribers;
 using Astick.Theatre.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Globalization;
 using System.Text.Encodings.Web;
@@ -59,30 +60,52 @@ namespace Astick.Theatre {
 							options.SupportedUICultures = supportedCultures;
 						});
 
-			//services.AddTransient<IdentityErrorDescriber, Cl_IdentityErrorDescriberRu>();
-			// добавление сервисов Idenity
+			services.AddTransient<IdentityErrorDescriber, Cl_IdentityErrorDescriberRu>();
 			services.AddIdentity<Cl_User, Cl_Role>()
-				.AddEntityFrameworkStores<Cl_AppDbContext, Guid>()
+				.AddEntityFrameworkStores<Cl_AppDbContext>()
 				.AddDefaultTokenProviders();
+
+			services.Configure<IdentityOptions>(options => {
+				// Password settings
+				options.Password.RequireDigit = false;  // требуются ли цифры
+				options.Password.RequiredLength = 6;  // минимальная длина
+				options.Password.RequireNonAlphanumeric = false;  // требуются ли не алфавитно-цифровые символы
+				options.Password.RequireUppercase = false;  // требуются ли символы в верхнем регистре
+				options.Password.RequireLowercase = false;  // требуются ли символы в нижнем регистре
+
+				// Lockout settings
+				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+				options.Lockout.MaxFailedAccessAttempts = 10;
+
+				// User settings
+				options.User.RequireUniqueEmail = true;
+			});
+
 
 			services.Configure<WebEncoderOptions>(options => {
 				options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
 			});
 
 			services.AddSession(options => {
-				options.CookieName = ".app.Session";
+				options.Cookie.Name = ".app.Session";
 				options.IdleTimeout = TimeSpan.FromSeconds(3600);
 			});
 
 			services.AddMvc(config => {
 				config.RespectBrowserAcceptHeader = false;
-			}).AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+			}).AddJsonOptions(
+				options => {
+					options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+					//options.SerializerSettings.Formatting = Formatting.None;
+					options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+				}
+			);
+			services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
 			services.AddScoped<I_ServiceViewRender, Cl_ServiceViewRender>();
 
 			// Add application services.
-			services.AddTransient<IEmailSender, AuthMessageSender>();
-			services.AddTransient<ISmsSender, AuthMessageSender>();
+			services.AddTransient<IEmailSender, EmailSender>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,7 +125,7 @@ namespace Astick.Theatre {
 
 			try {
 				db.Database.Migrate();
-				db.f_SeedAsync(app.ApplicationServices).Wait();
+				db.f_Seed(app);
 			} catch (Exception ex) {
 				logger.LogError(new EventId(0), ex, "Database initialization error");
 				throw;
@@ -110,7 +133,7 @@ namespace Astick.Theatre {
 
 			app.UseStaticFiles();
 			app.UseSession();
-			app.UseIdentity();
+			app.UseAuthentication();
 
 			app.UseMvc(routes => {
 				routes.MapRoute(
@@ -120,6 +143,7 @@ namespace Astick.Theatre {
 						name: "areas",
 						template: "{area:exists}/{controller=Users}/{action=Index}");
 			});
+
 		}
 	}
 }

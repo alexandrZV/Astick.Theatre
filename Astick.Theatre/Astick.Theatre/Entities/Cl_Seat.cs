@@ -44,13 +44,46 @@ namespace Astick.Theatre.Entities {
 		public string p_UserFIO { get; set; }
 		[Column("F_MOBILE")]
 		public string p_Mobile { get; set; }
-		[Column("F_PROMO")]
-		public string p_Promo { get; set; }
+		[Column("F_PROMO_CODE_ID")]
+		[ForeignKey("p_PromoCode")]
+		public Guid? p_PromoCodeID { get; set; }
+		public Cl_PromoCode p_PromoCode { get; set; }
 		[Column("F_PRICE")]
 		public decimal p_Price { get; set; }
+		[Column("F_TOTALPRICE")]
+		public decimal p_TotalPrice {
+			get {
+				if (p_PromoCode != null) {
+					return (p_Price * (100 - p_PromoCode.p_Discount)) / 100;
+				} else {
+					return p_Price;
+				}
+			}
+			set {	}
+		}
 		[Column("F_TYPE_EMPLOYMENT")]
-		public E_TypeEmployment p_TypeEmployment { get; set;}
-		[Column("F_COMMENT")] 
+		public E_TypeEmployment p_TypeEmployment { get; set; }
+		[Column("F_COMMENT")]
 		public string p_Comment { get; set; }
+
+		public int f_GetRowNumberReal() {
+			if (p_Session != null && p_Session.p_Hall != null) {
+				if (p_Type == E_Type.Parquet) {
+					return p_Row;
+				} else if (p_Type == E_Type.Amphitheater) {
+					return p_Row + p_Session.p_Hall.p_RowsCountParquet;
+				} else if (p_Type == E_Type.Mezzanine) {
+					return p_Row + p_Session.p_Hall.p_RowsCountParquet + p_Session.p_Hall.p_RowsCountAmphitheater;
+				} else if (p_Type == E_Type.Balcony) {
+					return p_Row + p_Session.p_Hall.p_RowsCountParquet + p_Session.p_Hall.p_RowsCountAmphitheater + p_Session.p_Hall.p_RowsCountMezzanine;
+				} else if (p_Type == E_Type.Lodges) {
+					return p_Row;
+				} else {
+					return -1;
+				}
+			} else {
+				return -1;
+			}
+		}
 	}
 }

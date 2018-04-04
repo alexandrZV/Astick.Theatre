@@ -255,3 +255,6 @@
 .content .listprms .params .button {
   text-align: right;
 }
+.filters_items > div {
+  margin-right: 10px;
+}

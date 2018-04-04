@@ -1,9 +1,12 @@
 ﻿using Astick.Core.Web;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Astick.Theatre.Entities {
+	/// <summary>
+	/// Класс пользователя
+	/// </summary>
 	public class Cl_User : IdentityUser<Guid>, I_ModelBD {
 		public Cl_User() { Id = Guid.NewGuid(); p_CreateDate = DateTime.Now; }
 		public Cl_User(string a_Name) : this() { UserName = a_Name; p_CreateDate = DateTime.Now; }

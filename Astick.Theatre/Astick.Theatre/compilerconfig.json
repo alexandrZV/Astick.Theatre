@@ -14,5 +14,33 @@
   {
     "outputFile": "wwwroot/css/session.css",
     "inputFile": "wwwroot/css/session.less"
+  },
+  {
+    "outputFile": "wwwroot/css/admin/arm.css",
+    "inputFile": "wwwroot/css/admin/arm.less"
+  },
+  {
+    "outputFile": "wwwroot/lib_astick/mdl/mdl-table.es5.js",
+    "inputFile": "wwwroot/lib_astick/mdl/mdl-table.js"
+  },
+  {
+    "outputFile": "wwwroot/lib_astick/mdl/mdl-table-infinite-scroll.es5.js",
+    "inputFile": "wwwroot/lib_astick/mdl/mdl-table-infinite-scroll.js"
+  },
+  {
+    "outputFile": "wwwroot/lib_astick/core.es5.js",
+    "inputFile": "wwwroot/lib_astick/core.js"
+  },
+  {
+    "outputFile": "wwwroot/lib_astick/mdl/mdl-table.css",
+    "inputFile": "wwwroot/lib_astick/mdl/mdl-table.less"
+  },
+  {
+    "outputFile": "wwwroot/lib_astick/mdl/mdl-table-core.es5.js",
+    "inputFile": "wwwroot/lib_astick/mdl/mdl-table-core.js"
+  },
+  {
+    "outputFile": "wwwroot/js/admin/arm.es5.js",
+    "inputFile": "wwwroot/js/admin/arm.js"
   }
 ]

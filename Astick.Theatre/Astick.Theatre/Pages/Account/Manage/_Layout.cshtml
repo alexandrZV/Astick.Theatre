@@ -1,0 +1,45 @@
+﻿@{
+	Layout = "/Pages/_Layout.cshtml";
+}
+
+@section Styles {
+	@RenderSection("Styles", required: false)
+	<environment names="Development">
+		<link href="~/lib_astick/bts/bootstrap-table.css" rel="stylesheet">
+	</environment>
+	<environment names="Staging,Production">
+		<link href="~/lib_astick/bts/bootstrap-table.min.css" rel="stylesheet">
+	</environment>
+}
+
+<h2>Личный кабинет</h2>
+
+<div>
+	<hr />
+	<div class="row">
+		<div class="col-md-2">
+			@await Html.PartialAsync("_ManageNav")
+		</div>
+		<div class="col-md-10">
+			@RenderBody()
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<environment names="Development">
+		<script src="~/lib/mdl/material.js"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="~/lib/mdl/material.min.js"></script>
+	</environment>
+
+	<script src="/lib_astick/core.es5.min.js"></script>
+
+	<script src="/lib_astick/bts/bootstrap-table.js" type="text/javascript"></script>
+
+	<script src="/lib/moment.min.js" type="text/javascript"></script>
+	<script src="/lib/moment-with-locales.min.js" type="text/javascript"></script>
+	@RenderSection("Scripts", required: false)
+}
+

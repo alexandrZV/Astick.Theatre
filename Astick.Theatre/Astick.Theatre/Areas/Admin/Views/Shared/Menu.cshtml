@@ -1,4 +1,11 @@
-﻿@*<a class="mdl-navigation__link" data-url="/admin/users" onclick="f_GoLink('/admin/users')"><i class="material-icons">people</i><span>Пользователи</span></a>
-<a class="mdl-navigation__link" data-url="/admin/roles" onclick="f_GoLink('/admin/roles')"><i class="material-icons">vpn_key</i><span>Роли</span></a>*@
+﻿@if (User.IsInRole("admin")) {
+<a class="mdl-navigation__link" data-url="/admin/users" onclick="f_GoLink('/admin/users')"><i class="material-icons">people</i><span>Пользователи</span></a>
+<a class="mdl-navigation__link" data-url="/admin/roles" onclick="f_GoLink('/admin/roles')"><i class="material-icons">vpn_key</i><span>Роли</span></a>
 <a class="mdl-navigation__link" data-url="/admin/halls" onclick="f_GoLink('/admin/halls')"><i class="material-icons">store_mall_directory</i><span>Залы</span></a>
+}
 <a class="mdl-navigation__link" data-url="/admin/sessions" onclick="f_GoLink('/admin/sessions')"><i class="material-icons">local_library</i><span>Концерты</span></a>
+@if (User.IsInRole("admin")) {
+<a class="mdl-navigation__link" data-url="/admin/promocodes" onclick="f_GoLink('/admin/promocodes')"><i class="material-icons">call_to_action</i><span>Промо-коды</span></a>
+<a class="mdl-navigation__link" data-url="/admin/statistic" onclick="f_GoLink('/admin/sessions/statistic')"><i class="material-icons">show_chart</i><span>Статистика</span></a>
+<a class="mdl-navigation__link" data-url="/admin/logs" onclick="f_GoLink('/admin/logs')"><i class="material-icons">content_paste</i><span>Логи</span></a>
+}
