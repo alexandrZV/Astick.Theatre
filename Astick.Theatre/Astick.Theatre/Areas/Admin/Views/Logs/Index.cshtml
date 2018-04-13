@@ -54,13 +54,14 @@
 					 data-show-refresh="true"
 					 data-total-fields="p_Price">
 			<thead>
-				<tr>
-					<th data-field="p_Date" data-type="datetime" data-align="center" data-sortable="true">Время</th>
-					<th data-field="p_User.p_FIO" data-sortable="true" data-filter-control="input">Пользователь</th>
-					<th data-field="p_TypeEmployment" data-type="select" data-select-data-type="enum" data-select-data-value="{'0':'Свободно', '1':'Забронирован', '2':'Приобретен'}" data-filter-control="select">Действие</th>
-					<th data-field="p_Price" data-type="money" data-align="center" data-sortable="true" data-total="true">Сумма</th>
-					<th data-field="p_Description">Описание</th>
-				</tr>
+                <tr>
+                    <th data-field="p_Date" data-type="datetime" data-align="center" data-sortable="true">Время</th>
+                    <th data-field="p_User.p_FIO" data-sortable="true" data-filter-control="input">Пользователь</th>
+                    <th data-field="p_TypeEmployment" data-type="select" data-select-data-type="enum" data-select-data-value="{'0':'Свободно', '1':'Забронирован', '2':'Приобретен'}" data-filter-control="select">Действие</th>
+                    <th data-field="p_Price" data-type="money" data-align="center" data-sortable="true" data-total="true">Сумма</th>
+                    <th data-field="p_Seat.p_UserFIO" data-sortable="true" data-filter-control="input">Клиент</th>
+                    <th data-field="p_Description">Описание</th>
+                </tr>
 			</thead>
 		</table>
 	</div>
